@@ -117,8 +117,8 @@ http {
 EOL
 
 sudo ln -sf $NGINX_CONF /etc/nginx/sites-enabled/
-sudo nginx -t -c /etc/nginx/sites-enabled/$APP_NAME
-sudo nginx -c /etc/nginx/sites-enabled/$APP_NAME
+sudo nginx -t -c $NGINX_CONF
+sudo nginx -c $NGINX_CONF
 
 # ==============================
 # APP DEPLOYMENT
