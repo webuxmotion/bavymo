@@ -1,0 +1,21 @@
+@use "colors";
+
+html {
+    height: 100%;
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400; // regular
+    background-color: colors.$primaryDark;
+    color: white;
+    height: 100%;
+}
+
+#root {
+    height: 100%;
+}
+
+h1 {
+    height: 100%;
+}

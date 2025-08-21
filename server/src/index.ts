@@ -1,0 +1,45 @@
+import express from "express";
+import http from "http";
+import path from "path";
+import { Server } from "socket.io";
+import cors from "cors";
+
+const app = express();
+app.use(cors());
+
+app.get("/server-test", (_req, res) => {
+  res.send("Server is running ✅");
+});
+
+// Only serve React build in production
+if (process.env.NODE_ENV === "production") {
+
+  const clientDistPath = path.join(__dirname, "../../client/dist");
+  app.use(express.static(clientDistPath));
+
+  // SPA fallback
+  app.get(/\*/, (_req, res) => {
+    res.sendFile(path.join(clientDistPath, "index.html"));
+  });
+}
+
+app.get("/server-test", (_req, res) => {
+  res.send("Server is running ✅");
+});
+
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: "*" } });
+
+io.on("connection", (socket) => {
+  console.log("🔌 Client connected:", socket.id);
+
+  socket.on("message", (msg: string) => {
+    console.log("💬 Message:", msg);
+    socket.emit("message", `Server received: ${msg}`);
+  });
+});
+
+const PORT = 4000;
+server.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+});
