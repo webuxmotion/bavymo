@@ -104,8 +104,8 @@ server {
 EOL
 
 sudo ln -sf $NGINX_CONF /etc/nginx/sites-enabled/
-sudo nginx -t -c /etc/nginx/sites-available/$APP_NAME
-sudo nginx -c /etc/nginx/sites-available/$APP_NAME
+sudo nginx -t -c /etc/nginx/sites-enabled/$APP_NAME
+sudo nginx -c /etc/nginx/sites-enabled/$APP_NAME
 
 # ==============================
 # APP DEPLOYMENT
