@@ -1,38 +1,12 @@
 .wrapper {
     @apply flex items-center justify-center h-full;
 
+    
     position: relative;
 
-    h1 {
-        font-size: 12px;
-        padding-top: 10px;
+    nav {
         position: absolute;
         top: 0;
-    }
-}
-
-.logo {
-    width: 20%;
-    min-width: 150px;
-    z-index: 100;
-
-    svg {
-        width: 100%;
-        height: auto;
-    }
-}
-
-.waves {
-    overflow: hidden;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-
-    svg {
-        transform: translateY(30%);
-        width: 100%;
-        height: auto;
-        pointer-events: none;
+        z-index: 20;
     }
 }
