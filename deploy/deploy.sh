@@ -55,7 +55,7 @@ server {
 }
 EOL
 
-sudo ln -sf $NGINX_TEMP_CONF еу
+sudo ln -sf $NGINX_TEMP_CONF /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 
