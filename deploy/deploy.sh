@@ -1,15 +1,6 @@
 #!/bin/bash
 
-# ==============================
-# CONFIGURATION VARIABLES
-# ==============================
-APP_NAME="bavymo"
-APP_DIR="/var/www/$APP_NAME"
-REPO_URL="https://github.com/webuxmotion/bavymo"
-DOMAIN=""
-VITE_SOCKET_URL="https://$DOMAIN"
-EMAIL=""
-BASE_URL="https://$DOMAIN"
+source ./deploy.conf
 
 # ==============================
 # SYSTEM UPDATE & DEPENDENCIES

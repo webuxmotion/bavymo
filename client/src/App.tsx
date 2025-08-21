@@ -27,7 +27,7 @@ function App() {
 
   return (
     <div className={clsx(styles.wrapper, "pb-20")}>
-      <h1 className="">Bavymo - video chat with games</h1>
+      <h1 className="">Bavymo - video chat with games!</h1>
       <div className={styles.logo}>
         <LogoBig />
       </div>

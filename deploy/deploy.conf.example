@@ -1,0 +1,10 @@
+# ==============================
+# CONFIGURATION VARIABLES
+# ==============================
+APP_NAME="bavymo"
+APP_DIR="/var/www/$APP_NAME"
+REPO_URL="https://github.com/webuxmotion/bavymo"
+DOMAIN="example.com"
+VITE_SOCKET_URL="https://$DOMAIN"
+EMAIL="you@example.com"
+BASE_URL="https://$DOMAIN"
