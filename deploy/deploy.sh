@@ -70,55 +70,42 @@ sudo certbot certonly --webroot -w /var/www/certbot \
 # ==============================
 NGINX_CONF="/etc/nginx/sites-available/$APP_NAME"
 sudo tee $NGINX_CONF > /dev/null <<EOL
-worker_processes  1;
-
-events {
-    worker_connections  1024;
+server {
+    listen 80;
+    server_name $DOMAIN www.$DOMAIN;
+    return 301 https://$host$request_uri;
 }
 
-http {
-    include       mime.types;
-    default_type  application/octet-stream;
-    sendfile        on;
-    keepalive_timeout  65;
+server {
+    listen 443 ssl;
+    server_name $DOMAIN www.$DOMAIN;
 
-    server {
-        listen 80;
-        server_name $DOMAIN www.$DOMAIN;
-        return 301 https://$host$request_uri;
+    ssl_certificate /etc/letsencrypt/live/$DOMAIN/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;
+
+    location /webhook {
+        proxy_pass http://localhost:9000/webhook;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
     }
 
-    server {
-        listen 443 ssl;
-        server_name $DOMAIN www.$DOMAIN;
-
-        ssl_certificate /etc/letsencrypt/live/$DOMAIN/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;
-
-        location /webhook {
-            proxy_pass http://localhost:9000/webhook;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
-            proxy_set_header Host $host;
-            proxy_cache_bypass $http_upgrade;
-        }
-
-        location / {
-            proxy_pass http://localhost:4000;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
-            proxy_set_header Host $host;
-            proxy_cache_bypass $http_upgrade;
-        }
+    location / {
+        proxy_pass http://localhost:4000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
     }
 }
 EOL
 
 sudo ln -sf $NGINX_CONF /etc/nginx/sites-enabled/
-sudo nginx -t -c $NGINX_CONF
-sudo nginx -c $NGINX_CONF
+sudo nginx -t -c /etc/nginx/sites-enabled/$APP_NAME
+sudo nginx -c /etc/nginx/sites-enabled/$APP_NAME
 
 # ==============================
 # APP DEPLOYMENT
