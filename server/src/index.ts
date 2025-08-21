@@ -13,12 +13,13 @@ app.get("/server-test", (_req, res) => {
 
 // Only serve React build in production
 if (process.env.NODE_ENV === "production") {
-
   const clientDistPath = path.join(__dirname, "../../client/dist");
+
+  // Serve static files
   app.use(express.static(clientDistPath));
 
-  // SPA fallback
-  app.get(/\*/, (_req, res) => {
+  // SPA fallback for all other routes
+  app.get(/.*/, (_req, res) => {
     res.sendFile(path.join(clientDistPath, "index.html"));
   });
 }
