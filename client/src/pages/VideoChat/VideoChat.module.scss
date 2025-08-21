@@ -1,0 +1,53 @@
+@use "../../styles/colors";
+
+.videoChat {
+    height: calc(100vh - 72px);
+    display: flex;
+}
+
+.main {
+    flex-grow: 1;
+    padding: 0 65px;
+    padding-top: 30px;
+}
+
+.sidebar {
+    width: 530px;
+}
+
+.sidebarInner {
+    position: relative;
+    height: calc(100% + 40px);
+    margin-top: -40px;
+    overflow: hidden;
+}
+
+.sidebarContent {
+    transition: transform 300ms ease-in-out;
+    background-color: #becef1;
+    height: calc(100% + 50px);
+    border-top-left-radius: 80px;
+    border-bottom-left-radius: 100px;
+    width: 100%;
+    transform: translateX(100%);
+
+    &.active {
+        transform: translateX(0);
+    }
+}
+
+.videoBox {
+    @apply flex items-center justify-center;
+    background-color: #a2b9eb;
+    border-radius: 100px;
+    padding: 150px 0;
+}
+
+.videoBoxImage {
+    width: 20%;
+
+    svg {
+        width: 100%;
+        height: auto;
+    }
+}

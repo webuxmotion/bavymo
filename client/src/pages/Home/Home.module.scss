@@ -1,19 +1,32 @@
-.wrapper {
-    @apply flex items-center justify-center h-full;
+@use "../../styles/colors";
 
-    width: 100%;
-    position: relative;
+.wrapper {
+    height: calc(100vh - 65px);
 
     h1 {
-        font-size: 12px;
-        padding-top: 10px;
         position: absolute;
-        top: 100px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+
+        bottom: 15px;
     }
+}
+
+.inner {
+    @apply flex items-center justify-center h-full;
+
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    z-index: 100;
+    padding-bottom: 100px;
 }
 
 .logo {
     width: 20%;
+
     min-width: 150px;
     z-index: 100;
 
@@ -36,4 +49,14 @@
         height: auto;
         pointer-events: none;
     }
+}
+
+.heroButton {
+    font-size: 20px;
+    font-weight: 500;
+    background-color: colors.$green;
+    padding: 17px 40px;
+    border-radius: 100px;
+    display: inline-block;
+    margin-top: 50px;
 }
