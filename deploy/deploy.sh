@@ -109,8 +109,8 @@ cd $APP_DIR || exit
 if [ ! -d "$APP_DIR/.git" ]; then
     git clone $REPO_URL $APP_DIR
 else
-    git reset --hard
-    git pull origin main
+    git fetch origin
+    git reset --hard origin/main
 fi
 
 npm install
