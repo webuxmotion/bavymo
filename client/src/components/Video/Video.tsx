@@ -10,10 +10,10 @@ export default function Video() {
     >
       <div className={styles.spacer} />
       <div className={styles.content}>
-        <div className={styles.localVideoWrapper}><LocalVideo /></div>
         <div className={styles.image}>
           <LogoBig />
         </div>
+        <div className={styles.localVideoWrapper}><LocalVideo /></div>
       </div>
     </div>
   );

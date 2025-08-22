@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Copy from '../../icons/Copy';
-import { useSocket } from '../../socket/useSocket';
+import { useSocket } from '../../modules/socket/useSocket';
 import styles from './PersonalCode.module.scss';
 
 export default function PersonalCode() {
