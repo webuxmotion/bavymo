@@ -18,8 +18,6 @@ export default function CallForm() {
           onChange={handleChange}
         />
         <button type="submit">Call</button>
-
-        {code}
       </form>
     </div>
   );

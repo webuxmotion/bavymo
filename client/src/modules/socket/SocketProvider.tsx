@@ -7,6 +7,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [personalCode, setPersonalCode] = useState("");
+    const [onlineUsers, setOnlineUsers] = useState([]);
 
     useEffect(() => {
         const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:4000";
@@ -23,6 +24,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
             setPersonalCode(data);
         });
 
+        newSocket.on("online-users", (data) => {
+            setOnlineUsers(data);
+        });
+
         newSocket.on("disconnect", () => {
             console.log("❌ Disconnected");
             setIsConnected(false);
@@ -34,7 +39,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <SocketContext.Provider value={{ socket, isConnected, personalCode }}>
+        <SocketContext.Provider value={{ socket, isConnected, personalCode, onlineUsers }}>
             {children}
         </SocketContext.Provider>
     );

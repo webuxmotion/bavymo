@@ -53,7 +53,8 @@ io.on("connection", (socket) => {
     console.log("❌ Client disconnected:", socket.id);
     store.removeUser(socket.id);
 
-    console.log(store.getAllUsers());
+    const onlineUsers = store.getAllUsers();
+    io.emit("online-users", onlineUsers);
   });
 });
 
