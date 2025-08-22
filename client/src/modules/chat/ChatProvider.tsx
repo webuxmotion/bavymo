@@ -2,11 +2,15 @@ import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { useSocket } from "../socket/useSocket"; // adjust path if needed
 import { ChatContext } from "./chat-context";
+import CallModal from "../../components/CallModal/CallModal";
+import type { OnlineUser } from "../../../../server/src/store";
 
 export function ChatProvider({ children }: { children: ReactNode }) {
     const { socket } = useSocket();
     const [messages, setMessages] = useState<string[]>([]);
     const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+    const [incoming, setIncoming] = useState(false);
+    const [callerUser, setCallerUser] = useState<OnlineUser | null>(null);
 
     useEffect(() => {
         const initMedia = async () => {
@@ -29,6 +33,16 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
         socket.on("message", handleMessage);
 
+        socket.on("call", ({ callerUser }) => {
+            setCallerUser(callerUser);
+            setIncoming(true);
+        });
+
+        socket.on("cancel-call", () => {
+            setCallerUser(null);
+            setIncoming(false);
+        });
+
         return () => {
             socket.off("message", handleMessage);
         };
@@ -41,9 +55,36 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    const handleAccept = () => {
+        if (socket && callerUser) {
+            socket.emit("call-accept", { callerUser });
+        }
+
+        setIncoming(false);
+    }
+
+    const handleReject = () => {
+        if (socket && callerUser) {
+            socket.emit("call-reject", { callerUser });
+        }
+
+        setIncoming(false);
+    }
+
     return (
         <ChatContext.Provider value={{ messages, sendMessage, localStream }}>
             {children}
+
+            {callerUser && (
+                <CallModal
+                    onClose={() => { }}
+                    open={incoming}
+                    onAccept={handleAccept}
+                    onReject={handleReject}
+                    type="incoming"
+                    callerName={callerUser.personalCode}
+                />
+            )}
         </ChatContext.Provider>
     );
 }

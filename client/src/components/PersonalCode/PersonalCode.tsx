@@ -22,7 +22,7 @@ export default function PersonalCode() {
     <div className={styles.personalCode}>
       <span className={styles.title}>Your code:</span>
       <span className={styles.code}>{personalCode}</span>
-      <button className={styles.button} onClick={handleCopy}>
+      <button className={styles.button} onClick={handleCopy} tabIndex={5}>
         <Copy />
       </button>
       {copied && <span className={styles.copied}>Copied!</span>}

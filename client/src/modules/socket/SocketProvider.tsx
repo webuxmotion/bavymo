@@ -41,6 +41,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     return (
         <SocketContext.Provider value={{ socket, isConnected, personalCode, onlineUsers }}>
             {children}
+            {socket?.id}
         </SocketContext.Provider>
     );
 }

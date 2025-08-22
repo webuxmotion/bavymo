@@ -1,4 +1,55 @@
 .callForm {
-  border: 1px solid red;
-  display: none;
+  padding-top: 30px;
+
+  form {
+    @apply flex items-center justify-center;
+  }
+}
+
+.button {
+  @apply inline-flex items-center;
+
+  font-size: 20px;
+  font-weight: bold;
+  display: inline-flex;
+  gap: 12px;
+  background-color: #19c290;
+  padding: 17px 41px;
+  border-radius: 100px;
+  cursor: pointer;
+}
+
+.icon {
+}
+
+.inputWrapper {
+  width: 270px;
+  margin-right: 16px;
+}
+
+.input {
+  border: 1px solid #becef1;
+  padding: 15px 20px;
+  border-radius: 100px;
+  width: 100%;
+  color: white;
+  font-weight: 300;
+  font-size: 20px;
+
+  &:hover {
+    border-color: #d2e0ff;
+
+    &::placeholder {
+      color: #d2e0ff;
+    }
+  }
+
+  &::placeholder {
+    color: #becef1;
+  }
+
+  &:focus {
+    outline: 4px solid #a2b9eb;
+    border-color: white;
+  }
 }

@@ -49,6 +49,33 @@ io.on("connection", (socket) => {
     socket.emit("message", `Server received: ${msg}`);
   });
 
+  socket.on("call", (data) => {
+    const { caller, callee } = data;
+
+    const calleeUser = store.findByPersonalCode(callee);
+    const callerUser = store.findByPersonalCode(caller);
+
+    if (calleeUser && callerUser) {
+      socket.to(calleeUser.socketId).emit("call", { callerUser });
+    }
+  });
+
+  socket.on("call-accept", ({ callerUser }) => {
+    socket.to(callerUser.socketId).emit("call-accept");
+  });
+
+  socket.on("call-reject", ({ callerUser }) => {
+    socket.to(callerUser.socketId).emit("call-reject");
+  });
+
+  socket.on("cancel-call", (data) => {
+    const calleeUser = store.findByPersonalCode(data);
+
+    if (calleeUser) {
+      socket.to(calleeUser.socketId).emit("cancel-call");
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("❌ Client disconnected:", socket.id);
     store.removeUser(socket.id);

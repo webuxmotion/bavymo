@@ -28,7 +28,7 @@ export class Store {
 
     findByPersonalCode(code: string): OnlineUser | undefined {
         return Array.from(this.onlineUsers.values()).find(
-            (user) => user.personalCode === code
+            (user) => user.personalCode.toUpperCase() === code.toUpperCase()
         );
     }
 }

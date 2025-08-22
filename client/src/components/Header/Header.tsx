@@ -31,6 +31,7 @@ export default function Header() {
             {LINKS.map((link) => (
               <li key={link.id}>
                 <NavLink
+                  tabIndex={5}
                   to={link.to}
                   className={({ isActive }) =>
                     isActive ? styles.active : undefined
