@@ -3,6 +3,7 @@ import http from "http";
 import path from "path";
 import { Server } from "socket.io";
 import cors from "cors";
+import { generateWord } from "./utils/generateWord";
 
 const app = express();
 app.use(cors());
@@ -33,6 +34,7 @@ const io = new Server(server, { cors: { origin: "*" } });
 
 io.on("connection", (socket) => {
   console.log("🔌 Client connected:", socket.id);
+  socket.emit("personal-code", generateWord());
 
   socket.on("message", (msg: string) => {
     console.log("💬 Message:", msg);

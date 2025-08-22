@@ -6,6 +6,7 @@ import { SocketContext } from "./socket-context";
 export function SocketProvider({ children }: { children: ReactNode }) {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [isConnected, setIsConnected] = useState(false);
+    const [personalCode, setPersonalCode] = useState("");
 
     useEffect(() => {
         const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:4000";
@@ -16,6 +17,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         newSocket.on("connect", () => {
             console.log("✅ Connected:", newSocket.id);
             setIsConnected(true);
+        });
+
+        newSocket.on("personal-code", (data) => {
+            setPersonalCode(data);
         });
 
         newSocket.on("disconnect", () => {
@@ -29,7 +34,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <SocketContext.Provider value={{ socket, isConnected }}>
+        <SocketContext.Provider value={{ socket, isConnected, personalCode }}>
             {children}
         </SocketContext.Provider>
     );

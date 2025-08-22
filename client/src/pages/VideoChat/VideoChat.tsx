@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import clsx from "clsx";
 import styles from "./VideoChat.module.scss";
-import LogoBig from "../../icons/LogoBig";
+import Video from "../../components/Video/Video";
+import PersonalCode from "../../components/PersonalCode/PersonalCode";
 
 function VideoChat() {
     const location = useLocation();
@@ -18,11 +19,8 @@ function VideoChat() {
     return (
         <div className={styles.videoChat}>
             <main className={styles.main}>
-                <div className={styles.videoBox}>
-                    <div className={styles.videoBoxImage}>
-                        <LogoBig />
-                    </div>
-                </div>
+                <PersonalCode />
+                <Video />
             </main>
             <section className={styles.sidebar}>
                 <div className={styles.sidebarInner}>

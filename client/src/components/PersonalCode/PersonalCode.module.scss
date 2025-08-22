@@ -1,0 +1,25 @@
+.personalCode {
+  @apply flex items-center justify-center;
+  padding-bottom: 16px;
+}
+
+.title {
+  font-size: 12px;
+  margin-right: 12px;
+}
+
+.code {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.button {
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border-radius: 100px;
+  margin-left: 12px;
+  cursor: pointer;
+  margin-right: 5px;
+  @apply inline-flex items-center justify-center;
+}

@@ -1,0 +1,35 @@
+.video {
+    background-color: #a2b9eb;
+    border-radius: 100px;
+    position: relative;
+}
+
+.spacer {
+    padding-bottom: 54%;
+}
+
+.image {
+    width: 20%;
+    opacity: 0.6;
+
+    svg {
+        width: 100%;
+        height: auto;
+    }
+}
+
+.content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    @apply flex items-center justify-center;
+}
+
+.localVideoWrapper {
+    position: absolute;
+    top: -20px;
+    left: -20px;
+}

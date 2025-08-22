@@ -35,19 +35,3 @@
         transform: translateX(0);
     }
 }
-
-.videoBox {
-    @apply flex items-center justify-center;
-    background-color: #a2b9eb;
-    border-radius: 100px;
-    padding: 150px 0;
-}
-
-.videoBoxImage {
-    width: 20%;
-
-    svg {
-        width: 100%;
-        height: auto;
-    }
-}
