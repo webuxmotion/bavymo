@@ -26,6 +26,7 @@ const configuration: RTCConfiguration = {
         { urls: 'stun:stun.l.google.com:19302' }, // для NAT traversal
         {
             urls: [
+                'stun:185.233.47.117:3478',
                 'turn:185.233.47.117:3478?transport=udp',
                 'turn:185.233.47.117:3478?transport=tcp'
             ],
