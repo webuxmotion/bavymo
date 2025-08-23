@@ -1,25 +1,41 @@
 import type { Socket } from "socket.io-client";
 import type { CallSetters } from "./callTypes";
 
+// const configuration: RTCConfiguration = {
+//     iceServers: [
+//         { urls: 'stun:stun.l.google.com:19302' },
+//         { urls: 'stun:stun1.l.google.com:19302' },
+//         { urls: 'stun:stun2.l.google.com:19302' },
+//         { urls: 'stun:stun3.l.google.com:19302' },
+//         { urls: 'stun:stun4.l.google.com:19302' },
+//         {
+//             urls: [
+//                 'stun:185.233.47.117:3478',
+//                 'turn:185.233.47.117:3478?transport=udp',
+//                 'turn:185.233.47.117:3478?transport=tcp'
+//             ],
+//             username: "webrtcuser@bavymo.com",
+//             credential: 'strongpassword'
+//         }
+//     ],
+//     iceTransportPolicy: "all"
+// };
+
 const configuration: RTCConfiguration = {
     iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' },
-        { urls: 'stun:stun2.l.google.com:19302' },
-        { urls: 'stun:stun3.l.google.com:19302' },
-        { urls: 'stun:stun4.l.google.com:19302' },
+        { urls: 'stun:stun.l.google.com:19302' }, // для NAT traversal
         {
             urls: [
-                'stun:185.233.47.117:3478',
                 'turn:185.233.47.117:3478?transport=udp',
                 'turn:185.233.47.117:3478?transport=tcp'
             ],
-            username: "webrtcuser@bavymo.com",
+            username: 'webrtcuser',  // обов’язково точно такий самий, як у turnserver.conf
             credential: 'strongpassword'
         }
     ],
-    iceTransportPolicy: "all"
+    iceTransportPolicy: "relay" // використовуємо і STUN, і TURN
 };
+
 
 type CreatePeerConnectionArgs = {
     callee: string; // personalCode or socketId of the callee
