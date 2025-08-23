@@ -6,6 +6,7 @@ import VideoChat from "./pages/VideoChat/VideoChat";
 import { useLocalVideo } from "./hooks/useLocalVideo";
 import { useEffect } from "react";
 import CallModals from "./features/call/CallModals/CallModals";
+import Test from "./components/Test";
 
 function App() {
   const { initMedia } = useLocalVideo();
@@ -22,7 +23,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/about" element={<Test />} />
         <Route path="/video-chat" element={<VideoChat />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -32,9 +33,6 @@ function App() {
   );
 }
 
-function About() {
-  return <h1>ℹ️ About</h1>;
-}
 function NotFound() {
   return <h1>404 - Not Found</h1>;
 }

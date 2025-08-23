@@ -7,10 +7,29 @@ import { generateWord } from "./utils/generateWord";
 import { store } from "./store";
 
 const app = express();
-app.use(cors());
+const origin = process.env.NODE_ENV === 'production' ? 'https://www.bavymo.com' : 'http://localhost:5173';
+app.use(cors({
+  origin,
+  credentials: true,
+}));
 
 app.get("/server-test", (_req, res) => {
   res.send("Server is running ✅");
+});
+
+app.get('/api/get-random-id', (req, res) => {
+  let randomId = req.cookies?.randomId;
+
+  if (!randomId) {
+    randomId = generateWord();
+    res.cookie('randomId', randomId, {
+      maxAge: 120000,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // true only in prod
+      path: '/',
+    });
+  }
+  res.json({ randomId });
 });
 
 // Only serve React build in production
@@ -20,10 +39,14 @@ if (process.env.NODE_ENV === "production") {
   // Serve static files
   app.use(express.static(clientDistPath));
 
-  // SPA fallback for all other routes
-  app.get(/.*/, (_req, res) => {
-    res.sendFile(path.join(clientDistPath, "index.html"));
+  app.get(/^\/(?!api|socket).*/, (req, res) => {
+    res.sendFile(path.join(clientDistPath, 'index.html'));
   });
+
+  // SPA fallback for all other routes
+  // app.get(/.*/, (_req, res) => {
+  //   res.sendFile(path.join(clientDistPath, "index.html"));
+  // });
 }
 
 app.get("/server-test", (_req, res) => {
@@ -31,9 +54,46 @@ app.get("/server-test", (_req, res) => {
 });
 
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
+const io = new Server(server, {
+  cors: {
+    origin, // frontend origin
+    credentials: true
+  }
+});
+
+type ServerData = {
+  users: string[];
+};
+
+const userMap = new Map();
+const serverData: ServerData = { users: [] };
 
 io.on("connection", (socket) => {
+  const cookies = socket.handshake.headers.cookie;
+  let randomId = null;
+
+  if (cookies) {
+    const cookieObj = Object.fromEntries(
+      cookies.split(';').map(c => c.trim().split('='))
+    );
+    randomId = cookieObj.randomId;
+  }
+
+  // Generate new randomId if missing
+  if (!randomId) {
+    randomId = generateWord();
+    // send it to client to store as cookie
+    socket.emit('setRandomId', randomId);
+  }
+
+  // Store mapping
+  userMap.set(randomId, socket.id);
+
+  const usersArray = [...userMap.keys()];
+  serverData.users = usersArray;
+  io.emit('serverData', serverData);
+
+
   console.log("🔌 Client connected:", socket.id);
 
   const personalCode = generateWord();
@@ -71,11 +131,19 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on('signal', ({ to, data }) => {
-    const targetUser = store.findByPersonalCode(to);
+  // socket.on('signal', ({ to, data }) => {
+  //   const targetUser = store.findByPersonalCode(to);
 
-    if (targetUser) {
-      io.to(targetUser.socketId).emit('signal', { from: to, data });
+  //   if (targetUser) {
+  //     io.to(targetUser.socketId).emit('signal', { from: to, data });
+  //   }
+  // });
+
+  // Signaling for WebRTC
+  socket.on('signal', ({ to, data }) => {
+    const targetSocketId = userMap.get(to);
+    if (targetSocketId) {
+      io.to(targetSocketId).emit('signal', { from: randomId, data });
     }
   });
 
@@ -105,6 +173,13 @@ io.on("connection", (socket) => {
 
     const onlineUsers = store.getAllUsers();
     io.emit("online-users", onlineUsers);
+
+
+    userMap.delete(randomId);
+
+    const usersArray = [...userMap.keys()];
+    serverData.users = usersArray;
+    io.emit('serverData', serverData);
   });
 });
 
