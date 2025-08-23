@@ -24,7 +24,7 @@ const SocketContext = createContext<SocketContextType | null>(null);
 
 // --- URL сервера ---
 const SERVER_URL =
-  process.env.NODE_ENV === 'production' ? 'https://www.kazuar.com.ua' : 'http://localhost:4000';
+  process.env.NODE_ENV === 'production' ? 'https://www.bavymo.com' : 'http://localhost:4000';
 
 // --- Провайдер ---
 export const IoProvider = ({ children }: IoProviderProps) => {
