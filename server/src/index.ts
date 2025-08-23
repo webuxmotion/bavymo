@@ -44,11 +44,6 @@ io.on("connection", (socket) => {
   const onlineUsers = store.getAllUsers();
   io.emit("online-users", onlineUsers);
 
-  socket.on("message", (msg: string) => {
-    console.log("💬 Message:", msg);
-    socket.emit("message", `Server received: ${msg}`);
-  });
-
   socket.on("call", (data) => {
     const { caller, callee } = data;
 
@@ -70,8 +65,6 @@ io.on("connection", (socket) => {
 
   socket.on("answer", ({ callee, caller, sdp }) => {
     const callerUser = store.findByPersonalCode(caller);
-
-    console.log('emit', callerUser);
 
     if (callerUser) {
       socket.to(callerUser.socketId).emit("answer", { sdp, caller, callee });

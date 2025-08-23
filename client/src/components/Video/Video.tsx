@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import Jobs from '@/icons/Jobs';
 import type { OnlineUser } from '@server/shared/types';
 import RemoteVideo from '../RemoteVideo/RemoteVideo';
+import { useData } from '@/hooks/useData';
 
 interface AnimatedUser extends OnlineUser {
   x: number;
@@ -18,6 +19,7 @@ export default function Video() {
   const { socket, onlineUsers } = useSocket();
   const [animatedUsers, setAnimatedUsers] = useState<AnimatedUser[]>([]);
   const contentRef = useRef<HTMLDivElement>(null);
+  const { remoteStream } = useData();
 
   useEffect(() => {
     let animationFrameId: number;
@@ -79,24 +81,31 @@ export default function Video() {
     >
       <div className={styles.spacer} />
       <div className={styles.content} ref={contentRef}>
-        <div className={styles.image}>
-          <LogoBig />
-        </div>
-        <RemoteVideo />
-        <div className={styles.users}>
-          {animatedUsers.map(u => (
-            <div
-              key={u.socketId}
-              className={styles.user}
-              style={{ transform: `translate(${u.x}px, ${u.y}px)` }}
-            >
-              <div className={styles.userIcon}>
-                <Jobs.Worker />
-              </div>
-              <span className={styles.userTitle}>{u.personalCode}</span>
+
+        {remoteStream ? (
+          <RemoteVideo />
+        ) : (
+          <>
+            <div className={styles.image}>
+              <LogoBig />
             </div>
-          ))}
-        </div>
+            <div className={styles.users}>
+              {animatedUsers.map(u => (
+                <div
+                  key={u.socketId}
+                  className={styles.user}
+                  style={{ transform: `translate(${u.x}px, ${u.y}px)` }}
+                >
+                  <div className={styles.userIcon}>
+                    <Jobs.Worker />
+                  </div>
+                  <span className={styles.userTitle}>{u.personalCode}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
         <div className={styles.localVideoWrapper}>
           <LocalVideo />
         </div>
