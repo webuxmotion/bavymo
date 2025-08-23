@@ -1,7 +1,7 @@
 import { initCallListeners } from "@/features/call/socket-listeners";
 import { SocketContext } from "@/providers/socket-context";
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { useAppContext } from "./AppProvider";
 
@@ -9,7 +9,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState([]);
-    const { setUser, callSetters } = useAppContext();
+    const { setRemoteStream, setUser, callSetters, data: { localStream } } = useAppContext();
+    const localStreamRef = useRef<MediaStream | null>(null);
+
+    useEffect(() => { localStreamRef.current = localStream }, [localStream]);
 
     useEffect(() => {
         const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:4000";
@@ -32,7 +35,12 @@ export function SocketProvider({ children }: { children: ReactNode }) {
             setOnlineUsers(data);
         });
 
-        initCallListeners(newSocket, callSetters);
+        initCallListeners({
+            socket: newSocket,
+            callSetters,
+            getLocalStream: () => localStreamRef.current,
+            setRemoteStream,
+        });
 
         newSocket.on("disconnect", () => {
             console.log("❌ Disconnected");
@@ -42,6 +50,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         return () => {
             newSocket.disconnect();
         };
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

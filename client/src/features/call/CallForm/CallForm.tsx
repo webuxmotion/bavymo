@@ -41,10 +41,6 @@ export default function CallForm() {
     callSetters.setOutgoing(false);
   }
 
-  useEffect(() => {
-    console.log(data.call);
-  }, [data.call]);
-
   return (
     <div className={styles.callForm}>
       <form onSubmit={handleSubmit}>

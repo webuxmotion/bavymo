@@ -5,6 +5,7 @@ import { useSocket } from '@/providers/useSocket';
 import { useEffect, useRef, useState } from 'react';
 import Jobs from '@/icons/Jobs';
 import type { OnlineUser } from '@server/shared/types';
+import RemoteVideo from '../RemoteVideo/RemoteVideo';
 
 interface AnimatedUser extends OnlineUser {
   x: number;
@@ -81,6 +82,7 @@ export default function Video() {
         <div className={styles.image}>
           <LogoBig />
         </div>
+        <RemoteVideo />
         <div className={styles.users}>
           {animatedUsers.map(u => (
             <div

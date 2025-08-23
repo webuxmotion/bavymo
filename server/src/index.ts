@@ -60,8 +60,38 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("call-accept", ({ callerUser }) => {
-    socket.to(callerUser.socketId).emit("call-accept");
+  socket.on("offer", ({ callee, caller, sdp }) => {
+    const calleeUser = store.findByPersonalCode(callee);
+
+    if (calleeUser) {
+      socket.to(calleeUser.socketId).emit("offer", { sdp, caller, callee });
+    }
+  });
+
+  socket.on("answer", ({ callee, caller, sdp }) => {
+    const callerUser = store.findByPersonalCode(caller);
+
+    console.log('emit', callerUser);
+
+    if (callerUser) {
+      socket.to(callerUser.socketId).emit("answer", { sdp, caller, callee });
+    }
+  });
+
+  socket.on('signal', ({ to, data }) => {
+    const targetUser = store.findByPersonalCode(to);
+
+    if (targetUser) {
+      io.to(targetUser.socketId).emit('signal', { from: to, data });
+    }
+  });
+
+  socket.on("call-accept", ({ caller, callee }) => {
+    const callerUser = store.findByPersonalCode(caller);
+
+    if (callerUser) {
+      socket.to(callerUser.socketId).emit("call-accept", { callee, caller });
+    }
   });
 
   socket.on("call-reject", ({ callerUser }) => {
