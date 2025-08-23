@@ -1,8 +1,9 @@
 .remoteVideo {
-  background-color: #dfe9ff;
   overflow: hidden;
-  resize: both;
+
   border-radius: 40px;
+  width: 100%;
+  height: 100%;
 }
 
 .video {
@@ -10,4 +11,5 @@
   height: 100%;
   object-fit: cover;
   pointer-events: none;
+  resize: both;
 }
