@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { useSocket } from "../socket/useSocket"; // adjust path if needed
 import { ChatContext } from "./chat-context";
-import CallModal from "../../components/CallModal/CallModal";
-import type { OnlineUser } from "../../../../server/src/store";
+import CallModal from "@/components/CallModal/CallModal";
+import type { OnlineUser } from "@server/shared/types";
 
 export function ChatProvider({ children }: { children: ReactNode }) {
     const { socket } = useSocket();

@@ -1,7 +1,4 @@
-export type OnlineUser = {
-    socketId: string;
-    personalCode: string;
-};
+import { OnlineUser } from "./shared/types";
 
 export class Store {
     private onlineUsers: Map<string, OnlineUser>; // key = socketId

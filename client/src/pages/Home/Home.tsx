@@ -1,9 +1,9 @@
 import styles from './Home.module.scss';
-import LogoBig from "../../icons/LogoBig";
-import Waves from "../../components/Waves";
+import LogoBig from "@/icons/LogoBig";
+import Waves from "@/components/Waves";
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from 'react';
-import { useChat } from '../../modules/chat/useChat';
+import { useChat } from '@/modules/chat/useChat';
 
 function Home() {
     const { localStream } = useChat();

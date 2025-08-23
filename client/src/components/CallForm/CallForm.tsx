@@ -1,9 +1,9 @@
 import type { ChangeEvent, FormEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import styles from './CallForm.module.scss';
-import Camera from '../../icons/Camera';
+import Camera from '@/icons/Camera';
 import CallModal from '../CallModal/CallModal';
-import { useSocket } from '../../modules/socket/useSocket';
+import { useSocket } from '@/modules/socket/useSocket';
 
 export default function CallForm() {
   const [code, setCode] = useState('');

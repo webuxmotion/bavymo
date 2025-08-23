@@ -1,5 +1,5 @@
 import { NavLink, Link, useLocation } from "react-router-dom";
-import Logo from "../../icons/Logo";
+import Logo from "@/icons/Logo";
 import styles from './Header.module.scss';
 import clsx from "clsx";
 

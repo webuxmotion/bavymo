@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useChat } from '../../modules/chat/useChat';
+import { useChat } from '@/modules/chat/useChat';
 import styles from './LocalVideo.module.scss';
 
 export default function LocalVideo() {

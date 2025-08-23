@@ -1,10 +1,10 @@
 import styles from './Video.module.scss';
-import LogoBig from "../../icons/LogoBig";
+import LogoBig from "@/icons/LogoBig";
 import LocalVideo from '../LocalVideo/LocalVideo';
-import { useSocket } from '../../modules/socket/useSocket';
+import { useSocket } from '@/modules/socket/useSocket';
 import { useEffect, useRef, useState } from 'react';
-import type { OnlineUser } from '../../../../server/src/store';
-import Jobs from '../../icons/Jobs';
+import Jobs from '@/icons/Jobs';
+import type { OnlineUser } from '@server/shared/types';
 
 interface AnimatedUser extends OnlineUser {
   x: number;
