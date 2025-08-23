@@ -1,19 +1,11 @@
-import styles from './Home.module.scss';
+import { Link } from "react-router-dom";
 import LogoBig from "@/icons/LogoBig";
 import Waves from "@/components/Waves";
-import { Link } from "react-router-dom";
-import { useEffect, useRef } from 'react';
-import { useChat } from '@/modules/chat/useChat';
+import styles from './Home.module.scss';
+import { useVideoStream } from "@/hooks/useVideoStream";
 
 function Home() {
-    const { localStream } = useChat();
-    const videoRef = useRef<HTMLVideoElement | null>(null);
-
-    useEffect(() => {
-        if (videoRef.current && localStream) {
-            videoRef.current.srcObject = localStream;
-        }
-    }, [localStream]);
+    const videoRef = useVideoStream();
 
     return (
         <div className={styles.wrapper}>

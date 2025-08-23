@@ -5,7 +5,6 @@ import { Socket } from "socket.io-client";
 export type SocketContextType = {
   socket: Socket | null;
   isConnected: boolean;
-  personalCode: string;
   onlineUsers: OnlineUser[]; // ✅ array of OnlineUser
 };
 
@@ -13,6 +12,5 @@ export type SocketContextType = {
 export const SocketContext = createContext<SocketContextType>({
   socket: null,
   isConnected: false,
-  personalCode: '',
   onlineUsers: [],
 });

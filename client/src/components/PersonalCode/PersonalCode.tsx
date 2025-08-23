@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import Copy from '@/icons/Copy';
-import { useSocket } from '@/modules/socket/useSocket';
 import styles from './PersonalCode.module.scss';
+import { useAppContext } from '@/providers/AppProvider';
 
 export default function PersonalCode() {
   const [copied, setCopied] = useState(false);
-  const { personalCode } = useSocket();
+  const { user: { personalCode } } = useAppContext();
 
   const handleCopy = async () => {
     try {

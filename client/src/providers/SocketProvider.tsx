@@ -1,13 +1,15 @@
+import { initCallListeners } from "@/features/call/socket-listeners";
+import { SocketContext } from "@/providers/socket-context";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { SocketContext } from "./socket-context";
+import { useAppContext } from "./AppProvider";
 
 export function SocketProvider({ children }: { children: ReactNode }) {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [isConnected, setIsConnected] = useState(false);
-    const [personalCode, setPersonalCode] = useState("");
     const [onlineUsers, setOnlineUsers] = useState([]);
+    const { setUser, callSetters } = useAppContext();
 
     useEffect(() => {
         const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:4000";
@@ -21,12 +23,16 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         });
 
         newSocket.on("personal-code", (data) => {
-            setPersonalCode(data);
+            setUser({
+                personalCode: data
+            });
         });
 
         newSocket.on("online-users", (data) => {
             setOnlineUsers(data);
         });
+
+        initCallListeners(newSocket, callSetters);
 
         newSocket.on("disconnect", () => {
             console.log("❌ Disconnected");
@@ -39,7 +45,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <SocketContext.Provider value={{ socket, isConnected, personalCode, onlineUsers }}>
+        <SocketContext.Provider value={{ socket, isConnected, onlineUsers }}>
             {children}
             {socket?.id}
         </SocketContext.Provider>

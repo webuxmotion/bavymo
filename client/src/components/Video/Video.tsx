@@ -1,7 +1,7 @@
 import styles from './Video.module.scss';
 import LogoBig from "@/icons/LogoBig";
 import LocalVideo from '../LocalVideo/LocalVideo';
-import { useSocket } from '@/modules/socket/useSocket';
+import { useSocket } from '@/providers/useSocket';
 import { useEffect, useRef, useState } from 'react';
 import Jobs from '@/icons/Jobs';
 import type { OnlineUser } from '@server/shared/types';
@@ -95,7 +95,9 @@ export default function Video() {
             </div>
           ))}
         </div>
-        <div className={styles.localVideoWrapper}><LocalVideo /></div>
+        <div className={styles.localVideoWrapper}>
+          <LocalVideo />
+        </div>
       </div>
     </div>
   );

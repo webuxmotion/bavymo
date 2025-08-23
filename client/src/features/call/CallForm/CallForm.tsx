@@ -3,37 +3,18 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './CallForm.module.scss';
 import Camera from '@/icons/Camera';
 import CallModal from '../CallModal/CallModal';
-import { useSocket } from '@/modules/socket/useSocket';
+import { useAppContext } from '@/providers/AppProvider';
+import { useSocket } from '@/providers/useSocket';
 
 export default function CallForm() {
   const [code, setCode] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const [outgoing, setOutgoing] = useState(false);
-  const { socket, personalCode } = useSocket();
+  const { callSetters, data, user } = useAppContext();
+  const { socket } = useSocket();
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
-
-  useEffect(() => {
-    if (!socket) return;
-
-    const handleAccept = () => {
-      setOutgoing(false);
-    }
-
-    const handleReject = () => {
-      setOutgoing(false);
-    }
-
-    socket.on("call-accept", handleAccept);
-    socket.on("call-reject", handleReject);
-
-    return () => {
-      socket.off("message", handleAccept);
-      socket.off("message", handleReject);
-    };
-  }, [socket]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCode(e.target.value);
@@ -41,30 +22,33 @@ export default function CallForm() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-
     if (!code) return;
 
-    setOutgoing(true);
+    callSetters.setCallStatus("calling");
+    callSetters.setCalleeId(code);
+    callSetters.setCallerId(user.personalCode);
+    callSetters.setOutgoing(true);
 
-    const data = {
-      caller: personalCode,
-      callee: code
-    };
-    socket?.emit("call", data);
+    setCode("");
+
+    socket?.emit("call", { caller: user.personalCode, callee: code });
   }
 
   const cancelCall = () => {
-    if (!socket) return;
-
-    socket.emit("cancel-call", code);
-
-    setOutgoing(false);
+    callSetters.setCallStatus("idle");
+    callSetters.setCalleeId("");
+    callSetters.setCallerId("");
+    callSetters.setOutgoing(false);
   }
+
+  useEffect(() => {
+    console.log(data.call);
+  }, [data.call]);
 
   return (
     <div className={styles.callForm}>
       <form onSubmit={handleSubmit}>
-        <div className={styles.inputWrapper} >
+        <div className={styles.inputWrapper}>
           <input
             ref={inputRef}
             tabIndex={0}
@@ -86,10 +70,10 @@ export default function CallForm() {
 
       <CallModal
         onClose={() => { }}
-        open={outgoing}
+        open={data.call.outgoing}
         onReject={cancelCall}
         type="outgoing"
-        callerName={code}
+        callerName={data.call.calleeId}
       />
     </div >
   );

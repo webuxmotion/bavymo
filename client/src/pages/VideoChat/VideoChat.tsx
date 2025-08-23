@@ -4,7 +4,7 @@ import clsx from "clsx";
 import styles from "./VideoChat.module.scss";
 import Video from "@/components/Video/Video";
 import PersonalCode from "@/components/PersonalCode/PersonalCode";
-import CallForm from "@/components/CallForm/CallForm";
+import CallForm from "@/features/call/CallForm/CallForm";
 
 function VideoChat() {
     const location = useLocation();

@@ -1,16 +1,8 @@
-import { useEffect, useRef } from 'react';
-import { useChat } from '@/modules/chat/useChat';
 import styles from './LocalVideo.module.scss';
+import { useVideoStream } from '@/hooks/useVideoStream';
 
 export default function LocalVideo() {
-  const { localStream } = useChat();
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-
-  useEffect(() => {
-    if (videoRef.current && localStream) {
-      videoRef.current.srcObject = localStream;
-    }
-  }, [localStream]);
+  const videoRef = useVideoStream();
 
   return (
     <div

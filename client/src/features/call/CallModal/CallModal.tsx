@@ -1,6 +1,6 @@
-import Modal from "../Modal/Modal";
 import { Phone, PhoneOff } from "lucide-react";
 import styles from "./CallModal.module.scss";
+import Modal from "@/components/Modal/Modal";
 
 interface CallModalProps {
   open: boolean;
@@ -8,7 +8,7 @@ interface CallModalProps {
   onAccept?: () => void;
   onReject?: () => void;
   type: "incoming" | "outgoing";
-  callerName: string;
+  callerName: string | undefined;
 }
 
 export default function CallModal({
