@@ -13,7 +13,6 @@ export default function RemoteVideo() {
         ref={videoRef}
         autoPlay
         playsInline
-        muted
       />
     </div>
   );
