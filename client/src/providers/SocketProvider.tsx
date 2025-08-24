@@ -11,7 +11,7 @@ export interface ServerData {
 }
 
 const SERVER_URL =
-    process.env.NODE_ENV === 'production' ? 'https://www.bavymo.com' : 'http://localhost:4000';
+    process.env.NODE_ENV === 'production' ? 'https://bavymo.com' : 'http://localhost:4000';
 
 export function SocketProvider({ children }: { children: ReactNode }) {
     const [socket, setSocket] = useState<Socket | null>(null);
@@ -31,7 +31,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         const setupSocket = async () => {
             const res = await fetch(`${SERVER_URL}/api/get-random-id`, { credentials: 'include' });
             const data = await res.json();
-            console.log('data', data);
             setRandomId(data.randomId);
 
             const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:4000";

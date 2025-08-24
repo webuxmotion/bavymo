@@ -11,7 +11,6 @@ function App() {
   const { initMedia } = useLocalVideo();
 
   useEffect(() => {
-    console.log('initMedia()');
     initMedia();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

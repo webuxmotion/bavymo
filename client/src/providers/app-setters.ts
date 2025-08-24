@@ -4,11 +4,9 @@ import type { AppContextType } from "./AppProvider";
 export function createSetters(setData: AppContextType["setData"]) {
   return {
     setLocalStream: (stream: MediaStream | null) => {
-      console.log('setLocalStream(stream)', stream);
       setData(prev => ({ ...prev, localStream: stream }));
     },
     setRemoteStream: (stream: MediaStream | null) => {
-      console.log('setRemoteStream(stream)', stream);
       setData(prev => ({ ...prev, remoteStream: stream }));
     },
     callSetters: createCallSetters(setData)

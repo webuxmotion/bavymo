@@ -9,9 +9,17 @@ import { store } from "./store";
 
 const app = express();
 app.use(cookieParser());
-const origin = process.env.NODE_ENV === 'production' ? 'https://www.bavymo.com' : 'http://localhost:5173';
+const allowedOrigins = [
+  "https://bavymo.com",
+  "https://www.bavymo.com",
+];
+
+if (process.env.NODE_ENV !== 'production') {
+  allowedOrigins.push("http://localhost:5173");
+}
+
 app.use(cors({
-  origin,
+  origin: allowedOrigins,
   credentials: true,
 }));
 
@@ -58,7 +66,7 @@ app.get("/server-test", (_req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin, // frontend origin
+    origin: allowedOrigins,
     credentials: true
   }
 });

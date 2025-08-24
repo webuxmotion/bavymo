@@ -5,12 +5,15 @@ import "./main.css"
 import "./styles/main.scss"
 import { SocketProvider } from './providers/SocketProvider.tsx';
 import { AppProvider } from './providers/AppProvider.tsx';
+import { AudioProvider } from './providers/AudioProvider.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <AppProvider>
       <SocketProvider>
-        <App />
+        <AudioProvider>
+          <App />
+        </AudioProvider>
       </SocketProvider>
     </AppProvider>
   </BrowserRouter>
