@@ -5,10 +5,31 @@ import styles from "./VideoChat.module.scss";
 import Video from "@/components/Video/Video";
 import PersonalCode from "@/components/PersonalCode/PersonalCode";
 import CallForm from "@/features/call/CallForm/CallForm";
+import { useSocket } from "@/providers/useSocket";
+import { useWebRTC } from "@/hooks/useWebRTC";
+import { useAppContext } from "@/providers/AppProvider";
 
 function VideoChat() {
     const location = useLocation();
     const [isActive, setIsActive] = useState(false);
+    const { socket, randomId } = useSocket();
+    const { setRemoteStream, callSetters } = useAppContext();
+    const { startCall } = useWebRTC(socket, setRemoteStream);
+
+    useEffect(() => {
+        const listener = async ({ callee, caller }: { callee: string, caller: string }) => {
+            console.log(caller);
+            startCall(callee);
+            callSetters.setOutgoing(false);
+        }
+
+        socket?.on("call-accept", listener);
+
+        return () => {
+            socket?.off("call-accept", listener);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [socket]);
 
     useEffect(() => {
         if (location.pathname === "/video-chat") {
@@ -20,7 +41,7 @@ function VideoChat() {
     return (
         <div className={styles.videoChat}>
             <main className={styles.main}>
-                <PersonalCode />
+                {randomId && <PersonalCode randomId={randomId} />}
                 <Video />
                 <CallForm />
             </main>

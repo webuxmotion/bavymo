@@ -5,59 +5,81 @@ import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { useAppContext } from "./AppProvider";
 
+export interface ServerData {
+    users: string[];
+    // додай інші поля, які приходять з сервера
+}
+
+const SERVER_URL =
+    process.env.NODE_ENV === 'production' ? 'https://www.bavymo.com' : 'http://localhost:4000';
+
 export function SocketProvider({ children }: { children: ReactNode }) {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState([]);
-    const { setRemoteStream, setUser, callSetters, data: { localStream } } = useAppContext();
+    const { setUser, callSetters, data: { localStream } } = useAppContext();
     const localStreamRef = useRef<MediaStream | null>(null);
+
+    const [randomId, setRandomId] = useState<string | null>(null);
+    const [serverData, setServerData] = useState<ServerData>({ users: [] });
 
     useEffect(() => { localStreamRef.current = localStream }, [localStream]);
 
     useEffect(() => {
-        const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:4000";
-        const newSocket = io(SOCKET_URL);
+        let newSocket: Socket | null = null;
 
-        setSocket(newSocket);
+        const setupSocket = async () => {
+            const res = await fetch(`${SERVER_URL}/api/get-random-id`, { credentials: 'include' });
+            const data = await res.json();
+            console.log('data', data);
+            setRandomId(data.randomId);
 
-        newSocket.on("connect", () => {
-            console.log("✅ Connected:", newSocket.id);
-            setIsConnected(true);
-        });
+            const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:4000";
+            newSocket = io(SOCKET_URL);
 
-        newSocket.on("personal-code", (data) => {
-            setUser({
-                personalCode: data
+            setSocket(newSocket);
+
+            newSocket.on("connect", () => {
+                console.log("✅ Connected:", newSocket?.id);
+                setIsConnected(true);
             });
-        });
 
-        newSocket.on("online-users", (data) => {
-            setOnlineUsers(data);
-        });
+            newSocket.on('setRandomId', (id: string) => setRandomId(id));
+            newSocket.on('serverData', (data: ServerData) => setServerData(data));
 
-        initCallListeners({
-            socket: newSocket,
-            callSetters,
-            getLocalStream: () => localStreamRef.current,
-            setRemoteStream,
-        });
+            newSocket.on("personal-code", (data) => {
+                setUser({
+                    personalCode: data
+                });
+            });
 
-        newSocket.on("disconnect", () => {
-            console.log("❌ Disconnected");
-            setIsConnected(false);
-        });
+            newSocket.on("online-users", (data) => {
+                setOnlineUsers(data);
+            });
+
+            initCallListeners({
+                socket: newSocket,
+                callSetters,
+            });
+
+            newSocket.on("disconnect", () => {
+                console.log("❌ Disconnected");
+                setIsConnected(false);
+            });
+        }
+
+        setupSocket();
 
         return () => {
-            newSocket.disconnect();
+            newSocket?.disconnect();
         };
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
-        <SocketContext.Provider value={{ socket, isConnected, onlineUsers }}>
+        <SocketContext.Provider value={{ socket, isConnected, onlineUsers, randomId, serverData }}>
             {children}
-            {socket?.id}
         </SocketContext.Provider>
     );
 }

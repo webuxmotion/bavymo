@@ -3,10 +3,12 @@ import http from "http";
 import path from "path";
 import { Server } from "socket.io";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { generateWord } from "./utils/generateWord";
 import { store } from "./store";
 
 const app = express();
+app.use(cookieParser());
 const origin = process.env.NODE_ENV === 'production' ? 'https://www.bavymo.com' : 'http://localhost:5173';
 app.use(cors({
   origin,
@@ -96,27 +98,32 @@ io.on("connection", (socket) => {
 
   console.log("🔌 Client connected:", socket.id);
 
-  const personalCode = generateWord();
-  store.addUser(socket.id, personalCode);
+  // const personalCode = generateWord();
+  // store.addUser(socket.id, personalCode);
 
-  socket.emit("personal-code", personalCode);
+  socket.emit("personal-code", randomId);
 
-  const onlineUsers = store.getAllUsers();
-  io.emit("online-users", onlineUsers);
+  // const onlineUsers = store.getAllUsers();
+  // io.emit("online-users", onlineUsers);
 
   socket.on("call", (data) => {
     const { caller, callee } = data;
 
-    const calleeUser = store.findByPersonalCode(callee);
-    const callerUser = store.findByPersonalCode(caller);
+    const calleeUser = userMap.get(callee.toUpperCase());
+    const callerUser = userMap.get(caller.toUpperCase());
 
     if (calleeUser && callerUser) {
-      socket.to(calleeUser.socketId).emit("call", { callerUser });
+      socket.to(calleeUser).emit("call", {
+        callerUser: {
+          personalCode: caller,
+          socketId: callerUser
+        }
+      });
     }
   });
 
   socket.on("offer", ({ callee, caller, sdp }) => {
-    const calleeUser = store.findByPersonalCode(callee);
+    const calleeUser = userMap.get(callee);
 
     if (calleeUser) {
       socket.to(calleeUser.socketId).emit("offer", { sdp, caller, callee });
@@ -124,7 +131,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("answer", ({ callee, caller, sdp }) => {
-    const callerUser = store.findByPersonalCode(caller);
+    const callerUser = userMap.get(caller);
 
     if (callerUser) {
       socket.to(callerUser.socketId).emit("answer", { sdp, caller, callee });
@@ -132,7 +139,7 @@ io.on("connection", (socket) => {
   });
 
   // socket.on('signal', ({ to, data }) => {
-  //   const targetUser = store.findByPersonalCode(to);
+  //   const targetUser = userMap.get(to);
 
   //   if (targetUser) {
   //     io.to(targetUser.socketId).emit('signal', { from: to, data });
@@ -141,6 +148,7 @@ io.on("connection", (socket) => {
 
   // Signaling for WebRTC
   socket.on('signal', ({ to, data }) => {
+
     const targetSocketId = userMap.get(to);
     if (targetSocketId) {
       io.to(targetSocketId).emit('signal', { from: randomId, data });
@@ -148,10 +156,12 @@ io.on("connection", (socket) => {
   });
 
   socket.on("call-accept", ({ caller, callee }) => {
-    const callerUser = store.findByPersonalCode(caller);
+    const callerUser = userMap.get(caller);
+
+    console.log('callerUser', callerUser);
 
     if (callerUser) {
-      socket.to(callerUser.socketId).emit("call-accept", { callee, caller });
+      socket.to(callerUser).emit("call-accept", { callee, caller });
     }
   });
 
@@ -160,7 +170,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("cancel-call", (data) => {
-    const calleeUser = store.findByPersonalCode(data);
+    const calleeUser = userMap.get(data);
 
     if (calleeUser) {
       socket.to(calleeUser.socketId).emit("cancel-call");

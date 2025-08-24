@@ -15,12 +15,10 @@ type SignalEvent = {
 type UseWebRTCReturn = {
     startCall: (calleeRandomId: string) => Promise<void>;
     localStream: MediaStream | null;
-    remoteStream: MediaStream | null;
 };
 
-export function useWebRTC(socket: Socket | null): UseWebRTCReturn {
+export function useWebRTC(socket: Socket | null, setRemoteStream: (stream: MediaStream) => void): UseWebRTCReturn {
     const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-    const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
 
     const pcRef = useRef<RTCPeerConnection | null>(null);
     const iceCandidateQueue = useRef<RTCIceCandidate[]>([]);
@@ -35,7 +33,6 @@ export function useWebRTC(socket: Socket | null): UseWebRTCReturn {
             stream?.getTracks().forEach(track => pcRef.current!.addTrack(track, stream));
 
             pcRef.current.ontrack = (event) => {
-                console.log('set remote stream');
                 setRemoteStream(event.streams[0]);
             };
 
@@ -45,6 +42,7 @@ export function useWebRTC(socket: Socket | null): UseWebRTCReturn {
                 }
             };
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [socket]
     );
 
@@ -56,7 +54,7 @@ export function useWebRTC(socket: Socket | null): UseWebRTCReturn {
         const offer = await pcRef.current.createOffer();
         await pcRef.current.setLocalDescription(offer);
 
-        console.log('i send offer');
+        console.log('i send offer', calleeRandomId, offer);
         socket?.emit('signal', { to: calleeRandomId, data: { sdp: offer } });
     };
 
@@ -80,7 +78,6 @@ export function useWebRTC(socket: Socket | null): UseWebRTCReturn {
                     const answer = await pcRef.current.createAnswer();
                     await pcRef.current.setLocalDescription(answer);
 
-                    console.log('i send answer');
                     socket.emit('signal', { to: from, data: { sdp: answer } });
                 }
             }
@@ -103,5 +100,5 @@ export function useWebRTC(socket: Socket | null): UseWebRTCReturn {
         };
     }, [socket, createPeerConnection]);
 
-    return { startCall, localStream, remoteStream };
+    return { startCall, localStream };
 }

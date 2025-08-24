@@ -1,15 +1,13 @@
 import { useState } from 'react';
 import Copy from '@/icons/Copy';
 import styles from './PersonalCode.module.scss';
-import { useAppContext } from '@/providers/AppProvider';
 
-export default function PersonalCode() {
+export default function PersonalCode({ randomId }: { randomId: string }) {
   const [copied, setCopied] = useState(false);
-  const { user: { personalCode } } = useAppContext();
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(personalCode);
+      await navigator.clipboard.writeText(randomId);
       setCopied(true);
 
       setTimeout(() => setCopied(false), 2000);
@@ -21,7 +19,7 @@ export default function PersonalCode() {
   return (
     <div className={styles.personalCode}>
       <span className={styles.title}>Your code:</span>
-      <span className={styles.code}>{personalCode}</span>
+      <span className={styles.code}>{randomId}</span>
       <button className={styles.button} onClick={handleCopy} tabIndex={5}>
         <Copy />
       </button>
