@@ -7,6 +7,7 @@ import Jobs from '@/icons/Jobs';
 import type { OnlineUser } from '@server/shared/types';
 import RemoteVideo from '../RemoteVideo/RemoteVideo';
 import { useData } from '@/hooks/useData';
+import { useAppContext } from '@/providers/AppProvider';
 
 interface AnimatedUser extends OnlineUser {
   x: number;
@@ -16,10 +17,11 @@ interface AnimatedUser extends OnlineUser {
 }
 
 export default function Video() {
-  const { socket, onlineUsers } = useSocket();
+  const { socket, serverData: { users: onlineUsers } } = useSocket();
   const [animatedUsers, setAnimatedUsers] = useState<AnimatedUser[]>([]);
   const contentRef = useRef<HTMLDivElement>(null);
   const { remoteStream } = useData();
+  const { user } = useAppContext();
 
   useEffect(() => {
     let animationFrameId: number;
@@ -61,9 +63,12 @@ export default function Video() {
       const centerY = height / 2;
 
       const users = onlineUsers
-        .filter(u => u.socketId !== socket.id)
+        .filter(u => u !== user.personalCode)
         .map(u => ({
-          ...u,
+          ...{
+            socketId: '',
+            personalCode: u
+          },
           // початкова позиція близько до центру з невеликим рандомним зміщенням
           x: centerX + (Math.random() - 0.5) * 50, // ±25px від центру
           y: centerY + (Math.random() - 0.5) * 50, // ±25px від центру
