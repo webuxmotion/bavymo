@@ -15,6 +15,8 @@ export function initCallListeners({
     });
 
     socket.on("cancel-call", () => {
-
+        callSetters.setIncoming(false);
+        callSetters.setCallerId("");
+        callSetters.setCallStatus("idle");
     });
 }

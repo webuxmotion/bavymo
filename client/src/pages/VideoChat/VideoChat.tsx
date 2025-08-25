@@ -17,8 +17,7 @@ function VideoChat() {
     const { startCall } = useWebRTC(socket, setRemoteStream);
 
     useEffect(() => {
-        const listener = async ({ callee, caller }: { callee: string, caller: string }) => {
-            console.log(caller);
+        const listener = async ({ callee }: { callee: string }) => {
             startCall(callee);
             callSetters.setOutgoing(false);
         }

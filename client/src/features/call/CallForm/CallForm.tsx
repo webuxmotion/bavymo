@@ -39,6 +39,8 @@ export default function CallForm() {
     callSetters.setCalleeId("");
     callSetters.setCallerId("");
     callSetters.setOutgoing(false);
+
+    socket?.emit("cancel-call", data.call.calleeId);
   }
 
   return (

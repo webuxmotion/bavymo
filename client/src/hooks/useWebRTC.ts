@@ -54,7 +54,6 @@ export function useWebRTC(socket: Socket | null, setRemoteStream: (stream: Media
         const offer = await pcRef.current.createOffer();
         await pcRef.current.setLocalDescription(offer);
 
-        console.log('i send offer', calleeRandomId, offer);
         socket?.emit('signal', { to: calleeRandomId, data: { sdp: offer } });
     };
 

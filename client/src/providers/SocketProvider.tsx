@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { useAppContext } from "./AppProvider";
+import { useUsersStore } from "@/store/useUsersStore";
 
 export interface ServerData {
     users: string[];
@@ -16,12 +17,13 @@ const SERVER_URL =
 export function SocketProvider({ children }: { children: ReactNode }) {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [isConnected, setIsConnected] = useState(false);
-    const [onlineUsers, setOnlineUsers] = useState([]);
     const { setUser, callSetters, data: { localStream } } = useAppContext();
     const localStreamRef = useRef<MediaStream | null>(null);
 
     const [randomId, setRandomId] = useState<string | null>(null);
     const [serverData, setServerData] = useState<ServerData>({ users: [] });
+
+    const setUsers = useUsersStore((state) => state.setUsers);
 
     useEffect(() => { localStreamRef.current = localStream }, [localStream]);
 
@@ -53,7 +55,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
             });
 
             newSocket.on("online-users", (data) => {
-                setOnlineUsers(data);
+                setUsers(data);
             });
 
             initCallListeners({
@@ -77,7 +79,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <SocketContext.Provider value={{ socket, isConnected, onlineUsers, randomId, serverData }}>
+        <SocketContext.Provider value={{ socket, isConnected, randomId, serverData }}>
             {children}
         </SocketContext.Provider>
     );
