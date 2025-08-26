@@ -8,7 +8,6 @@ import type { OnlineUser } from '@server/shared/types';
 import RemoteVideo from '../RemoteVideo/RemoteVideo';
 import { useAppContext } from '@/providers/AppProvider';
 import { useUsersStore } from '@/store/useUsersStore';
-import MicVisualizer from '../MicVisualizer/MicVisualizer';
 import { useStreamsStore } from '@/store/useStreamsStore';
 
 interface AnimatedUser extends OnlineUser {
@@ -87,7 +86,6 @@ export default function Video() {
     >
       <div className={styles.spacer} />
       <div className={styles.content} ref={contentRef}>
-        <MicVisualizer />
 
         {remoteStream ? (
           <RemoteVideo />

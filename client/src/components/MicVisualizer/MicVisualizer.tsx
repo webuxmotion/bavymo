@@ -39,7 +39,7 @@ export default function MicVisualizer() {
                     key={i}
                     className={styles.line}
                     style={{
-                        height: `${value / 2}px`, // scale bar height
+                        height: `${value / 3}px`, // scale bar height
                     }}
                 />
             ))}

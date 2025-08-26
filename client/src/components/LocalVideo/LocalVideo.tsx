@@ -1,3 +1,4 @@
+import MicVisualizer from '../MicVisualizer/MicVisualizer';
 import styles from './LocalVideo.module.scss';
 import { useLocalVideoRef } from '@/hooks/useLocalVideoRef';
 
@@ -15,6 +16,8 @@ export default function LocalVideo() {
         playsInline
         muted
       />
+
+      <MicVisualizer />
     </div>
   );
 }
