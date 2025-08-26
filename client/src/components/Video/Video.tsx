@@ -9,6 +9,7 @@ import RemoteVideo from '../RemoteVideo/RemoteVideo';
 import { useData } from '@/hooks/useData';
 import { useAppContext } from '@/providers/AppProvider';
 import { useUsersStore } from '@/store/useUsersStore';
+import MicVisualizer from '../MicVisualizer/MicVisualizer';
 
 interface AnimatedUser extends OnlineUser {
   x: number;
@@ -86,6 +87,7 @@ export default function Video() {
     >
       <div className={styles.spacer} />
       <div className={styles.content} ref={contentRef}>
+        <MicVisualizer />
 
         {remoteStream ? (
           <RemoteVideo />
