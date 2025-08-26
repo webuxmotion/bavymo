@@ -5,6 +5,7 @@ import Camera from '@/icons/Camera';
 import CallModal from '../CallModal/CallModal';
 import { useAppContext } from '@/providers/AppProvider';
 import { useSocket } from '@/providers/useSocket';
+import { ScreenShareButton } from '@/components/ScreenShareButton/ScreenShareButton';
 
 export default function CallForm() {
   const [code, setCode] = useState('');
@@ -46,26 +47,32 @@ export default function CallForm() {
   return (
     <div className={styles.callForm}>
 
-      <form onSubmit={handleSubmit}>
-        <div className={styles.inputWrapper}>
-          <input
-            ref={inputRef}
-            tabIndex={0}
-            name="code"
-            type="text"
-            value={code}
-            onChange={handleChange}
-            className={styles.input}
-            placeholder='Paste friend’s code here...'
-          />
+      {data.call.status === "connected" ? (
+        <div className='flex justify-center'>
+          <ScreenShareButton />
         </div>
-        <button type="submit" className={styles.button} tabIndex={0}>
-          <div className={styles.icon}>
-            <Camera />
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <div className={styles.inputWrapper}>
+            <input
+              ref={inputRef}
+              tabIndex={0}
+              name="code"
+              type="text"
+              value={code}
+              onChange={handleChange}
+              className={styles.input}
+              placeholder='Paste friend’s code here...'
+            />
           </div>
-          Call
-        </button>
-      </form>
+          <button type="submit" className={styles.button} tabIndex={0}>
+            <div className={styles.icon}>
+              <Camera />
+            </div>
+            Call
+          </button>
+        </form>
+      )}
 
       <CallModal
         onClose={() => { }}

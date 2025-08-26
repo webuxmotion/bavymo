@@ -20,6 +20,7 @@ function VideoChat() {
         const listener = async ({ callee }: { callee: string }) => {
             startCall(callee);
             callSetters.setOutgoing(false);
+            callSetters.setCallStatus("connected");
         }
 
         socket?.on("call-accept", listener);

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { configuration } from './configuration';
 import type { Socket } from 'socket.io-client';
+import { usePeerConnectionStore } from '../store/usePeerConnectionStore';
 
 type SignalData = {
     sdp?: RTCSessionDescriptionInit;
@@ -19,13 +20,15 @@ type UseWebRTCReturn = {
 
 export function useWebRTC(socket: Socket | null, setRemoteStream: (stream: MediaStream) => void): UseWebRTCReturn {
     const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-
     const pcRef = useRef<RTCPeerConnection | null>(null);
     const iceCandidateQueue = useRef<RTCIceCandidate[]>([]);
+    const setPeerConnection = usePeerConnectionStore((state) => state.setPeerConnection);
 
     const createPeerConnection = useCallback(
         async (calleeRandomId: string) => {
             pcRef.current = new RTCPeerConnection(configuration);
+
+            setPeerConnection(pcRef.current);
 
             const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
             setLocalStream(stream);
