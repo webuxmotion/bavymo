@@ -11,7 +11,7 @@ export default function MicButton() {
 
   return (
     <Tooltip
-      content={localAudioActive ? "Enable Mic" : "Disable Mic"}
+      content={localAudioActive ? "Disable Mic" : "Enable Mic"}
       delay={200}
     >
       <button
