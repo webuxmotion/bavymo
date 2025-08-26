@@ -1,10 +1,11 @@
 import { initCallListeners } from "@/features/call/socket-listeners";
 import { SocketContext } from "@/providers/socket-context";
 import type { ReactNode } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { useAppContext } from "./AppProvider";
 import { useUsersStore } from "@/store/useUsersStore";
+import { closePeerConnectionAndResetStore } from "@/utils/closePeerConnectionAndResetStore";
 
 export interface ServerData {
     users: string[];
@@ -17,15 +18,12 @@ const SERVER_URL =
 export function SocketProvider({ children }: { children: ReactNode }) {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [isConnected, setIsConnected] = useState(false);
-    const { setUser, callSetters, data: { localStream } } = useAppContext();
-    const localStreamRef = useRef<MediaStream | null>(null);
+    const { setUser, callSetters } = useAppContext();
 
     const [randomId, setRandomId] = useState<string | null>(null);
     const [serverData, setServerData] = useState<ServerData>({ users: [] });
 
     const setUsers = useUsersStore((state) => state.setUsers);
-
-    useEffect(() => { localStreamRef.current = localStream }, [localStream]);
 
     useEffect(() => {
         let newSocket: Socket | null = null;
@@ -61,6 +59,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
             initCallListeners({
                 socket: newSocket,
                 callSetters,
+            });
+
+            newSocket.on("user-hanged-up", () => {
+                closePeerConnectionAndResetStore({ callSetters });
             });
 
             newSocket.on("disconnect", () => {

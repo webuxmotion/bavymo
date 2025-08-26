@@ -7,6 +7,7 @@ import { useAppContext } from '@/providers/AppProvider';
 import { useSocket } from '@/providers/useSocket';
 import { ScreenShareButton } from '@/components/ScreenShareButton/ScreenShareButton';
 import MicButton from '@/components/MicButton/MicButton';
+import PhoneCancelButton from '@/components/PhoneCancelButton/PhoneCancelButton';
 
 export default function CallForm() {
   const [code, setCode] = useState('');
@@ -49,9 +50,10 @@ export default function CallForm() {
     <div className={styles.callForm}>
 
       {data.call.status === "connected" ? (
-        <div className='flex justify-center'>
+        <div className='flex justify-center items-center gap-2'>
           <ScreenShareButton />
           <MicButton />
+          <PhoneCancelButton />
         </div>
       ) : (
         <form onSubmit={handleSubmit}>
@@ -73,8 +75,6 @@ export default function CallForm() {
             </div>
             Call
           </button>
-          <ScreenShareButton />
-          <MicButton />
         </form>
       )}
 

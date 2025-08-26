@@ -6,10 +6,10 @@ import { useEffect, useRef, useState } from 'react';
 import Jobs from '@/icons/Jobs';
 import type { OnlineUser } from '@server/shared/types';
 import RemoteVideo from '../RemoteVideo/RemoteVideo';
-import { useData } from '@/hooks/useData';
 import { useAppContext } from '@/providers/AppProvider';
 import { useUsersStore } from '@/store/useUsersStore';
 import MicVisualizer from '../MicVisualizer/MicVisualizer';
+import { useStreamsStore } from '@/store/useStreamsStore';
 
 interface AnimatedUser extends OnlineUser {
   x: number;
@@ -22,7 +22,7 @@ export default function Video() {
   const { socket } = useSocket();
   const [animatedUsers, setAnimatedUsers] = useState<AnimatedUser[]>([]);
   const contentRef = useRef<HTMLDivElement>(null);
-  const { remoteStream } = useData();
+  const { remoteStream } = useStreamsStore();
   const { user } = useAppContext();
 
   const onlineUsers = useUsersStore((state) => state.users);

@@ -16,8 +16,8 @@
         width: 50%;
         height: auto;
 
-        g {
-            fill: #7086b6;
+        path {
+            fill: #4e6aa7;
             transition: fill 0.2s ease;
         }
     }
@@ -25,7 +25,7 @@
     &:hover {
         background-color: #eef3ff;
         svg g {
-            fill: #51699e;
+            fill: #4e6aa7;
         }
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); // subtle lift
     }
@@ -34,7 +34,7 @@
         background-color: #cbdafc;
         transform: scale(0.95); // small press animation
         svg g {
-            fill: #8396c1;
+            fill: #4e6aa7;
         }
         box-shadow: 0 0 0 transparent;
     }

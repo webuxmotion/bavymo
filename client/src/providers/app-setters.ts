@@ -6,9 +6,6 @@ export function createSetters(setData: AppContextType["setData"]) {
     setLocalStream: (stream: MediaStream | null) => {
       setData(prev => ({ ...prev, localStream: stream }));
     },
-    setRemoteStream: (stream: MediaStream | null) => {
-      setData(prev => ({ ...prev, remoteStream: stream }));
-    },
     callSetters: createCallSetters(setData)
   };
 }

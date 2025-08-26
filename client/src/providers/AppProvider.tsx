@@ -8,8 +8,6 @@ import { initialCallData } from "@/features/call/initialCallData";
 import type { createCallSetters } from "@/features/call/call-setters";
 
 type Data = {
-    localStream: MediaStream | null;
-    remoteStream: MediaStream | null;
     call: Call
 }
 
@@ -24,8 +22,6 @@ export type AppContextType = {
     setToken: (t: string) => void;
     data: Data;
     setData: React.Dispatch<React.SetStateAction<Data>>;
-    setLocalStream: (stream: MediaStream | null) => void;
-    setRemoteStream: (stream: MediaStream | null) => void;
     callSetters: ReturnType<typeof createCallSetters>;
 };
 
@@ -37,12 +33,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     });
     const [token, setToken] = useState("");
     const [data, setData] = useState<Data>({
-        localStream: null,
-        remoteStream: null,
         call: initialCallData
     });
 
-    const { setLocalStream, setRemoteStream, callSetters } = createSetters(setData);
+    const { callSetters } = createSetters(setData);
 
     return (
         <AppContext.Provider value={{
@@ -52,8 +46,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
             setToken,
             data,
             setData,
-            setLocalStream,
-            setRemoteStream,
             callSetters
         }}>
             {children}

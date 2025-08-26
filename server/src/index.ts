@@ -158,6 +158,14 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("user-hanged-up", ({ targetCode }) => {
+    const targetUser = store.findByPersonalCode(targetCode);
+
+    if (targetUser) {
+      socket.to(targetUser.socketId).emit("user-hanged-up");
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("❌ Client disconnected:", socket.id);
     store.removeUser(socket.id);

@@ -18,11 +18,14 @@ type UseWebRTCReturn = {
     startCall: (calleeRandomId: string) => Promise<void>;
 };
 
-export function useWebRTC(socket: Socket | null, setRemoteStream: (stream: MediaStream) => void): UseWebRTCReturn {
+export function useWebRTC(socket: Socket | null): UseWebRTCReturn {
     const pcRef = useRef<RTCPeerConnection | null>(null);
     const iceCandidateQueue = useRef<RTCIceCandidate[]>([]);
-    const setPeerConnection = usePeerConnectionStore((state) => state.setPeerConnection);
-    const { setLocalStream } = useStreamsStore(state => state);
+    const setPeerConnection = usePeerConnectionStore(s => s.setPeerConnection);
+    const setPcRef = usePeerConnectionStore(s => s.setPcRef);
+    const { setLocalStream, setRemoteStream } = useStreamsStore(state => state);
+
+    setPcRef(pcRef);
 
     const createPeerConnection = useCallback(
         async (calleeRandomId: string) => {

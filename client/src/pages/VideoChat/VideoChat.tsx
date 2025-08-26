@@ -13,8 +13,8 @@ function VideoChat() {
     const location = useLocation();
     const [isActive, setIsActive] = useState(false);
     const { socket, randomId } = useSocket();
-    const { setRemoteStream, callSetters } = useAppContext();
-    const { startCall } = useWebRTC(socket, setRemoteStream);
+    const { callSetters } = useAppContext();
+    const { startCall } = useWebRTC(socket);
 
     useEffect(() => {
         const listener = async ({ callee }: { callee: string }) => {
