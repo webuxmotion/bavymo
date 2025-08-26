@@ -35,3 +35,14 @@
         transform: translateX(0);
     }
 }
+
+@media (max-width: 1300px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .main {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}

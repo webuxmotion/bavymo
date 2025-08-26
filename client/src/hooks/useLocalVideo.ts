@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import { useAppContext } from "@/providers/AppProvider";
+import { useStreamsStore } from "@/store/useStreamsStore";
 
 export function useLocalVideo() {
-  const { setLocalStream } = useAppContext();
+  const setLocalStream = useStreamsStore(s => s.setLocalStream);
 
   const initMedia = useCallback(async () => {
     try {

@@ -1,11 +1,9 @@
 import { useEffect, useRef } from "react";
-import { useData } from '@/hooks/useData';
 import { useStreamsStore } from "@/store/useStreamsStore";
 
-export function useVideoStream() {
+export function useLocalVideoRef() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const { localStream } = useData();
-  const { screenSharingActive, screenSharingStream } = useStreamsStore();
+  const { localStream, screenSharingActive, screenSharingStream } = useStreamsStore();
 
   useEffect(() => {
     if (videoRef.current) {

@@ -1,8 +1,9 @@
 import ScreenShare from "@/icons/ScreenShare";
 import { useStreamsStore } from "@/store/useStreamsStore";
 import { switchScreenSharing } from "@/utils/switchScreenSharing";
-import styles from './ScreenShareButton.module.scss';
 import { Tooltip } from "../Tooltip/Tooltip";
+import styles from './ScreenShareButton.module.scss';
+
 
 export function ScreenShareButton() {
   const screenSharingActive = useStreamsStore((s) => s.screenSharingActive);

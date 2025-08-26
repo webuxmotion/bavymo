@@ -6,6 +6,7 @@ import CallModal from '../CallModal/CallModal';
 import { useAppContext } from '@/providers/AppProvider';
 import { useSocket } from '@/providers/useSocket';
 import { ScreenShareButton } from '@/components/ScreenShareButton/ScreenShareButton';
+import MicButton from '@/components/MicButton/MicButton';
 
 export default function CallForm() {
   const [code, setCode] = useState('');
@@ -50,6 +51,7 @@ export default function CallForm() {
       {data.call.status === "connected" ? (
         <div className='flex justify-center'>
           <ScreenShareButton />
+          <MicButton />
         </div>
       ) : (
         <form onSubmit={handleSubmit}>
@@ -71,6 +73,8 @@ export default function CallForm() {
             </div>
             Call
           </button>
+          <ScreenShareButton />
+          <MicButton />
         </form>
       )}
 

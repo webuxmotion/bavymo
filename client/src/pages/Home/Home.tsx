@@ -2,10 +2,10 @@ import { Link } from "react-router-dom";
 import LogoBig from "@/icons/LogoBig";
 import Waves from "@/components/Waves";
 import styles from './Home.module.scss';
-import { useVideoStream } from "@/hooks/useVideoStream";
+import { useLocalVideoRef } from "@/hooks/useLocalVideoRef";
 
 function Home() {
-    const videoRef = useVideoStream();
+    const videoRef = useLocalVideoRef();
 
     return (
         <div className={styles.wrapper}>

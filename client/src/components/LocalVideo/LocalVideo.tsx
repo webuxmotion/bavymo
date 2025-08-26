@@ -1,8 +1,8 @@
 import styles from './LocalVideo.module.scss';
-import { useVideoStream } from '@/hooks/useVideoStream';
+import { useLocalVideoRef } from '@/hooks/useLocalVideoRef';
 
 export default function LocalVideo() {
-  const videoRef = useVideoStream();
+  const videoRef = useLocalVideoRef();
 
   return (
     <div
