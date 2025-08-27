@@ -1,6 +1,6 @@
 import { useStreamsStore } from "../store/useStreamsStore";
 
-export const switchAudio = (active: boolean) => {
+export const switchAudio = () => {
     const { localStream, setLocalStream, setLocalAudioActive } =
         useStreamsStore.getState();
 
@@ -11,5 +11,5 @@ export const switchAudio = (active: boolean) => {
     }
 
     setLocalStream(localStream);
-    setLocalAudioActive(!active);
+    setLocalAudioActive(!micEnabled);
 }

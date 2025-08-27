@@ -8,6 +8,7 @@ import { useSocket } from '@/providers/useSocket';
 import { ScreenShareButton } from '@/components/ScreenShareButton/ScreenShareButton';
 import MicButton from '@/components/MicButton/MicButton';
 import PhoneCancelButton from '@/components/PhoneCancelButton/PhoneCancelButton';
+import ToggleVideoButton from '@/components/ToggleVideoButton/ToggleVideoButton';
 
 export default function CallForm() {
   const [code, setCode] = useState('');
@@ -51,8 +52,11 @@ export default function CallForm() {
 
       {data.call.status === "connected" ? (
         <div className='flex justify-center items-center gap-2'>
-          <ScreenShareButton />
+          
           <MicButton />
+          <ToggleVideoButton />
+          <ScreenShareButton />
+          <span className='p-2'/>
           <PhoneCancelButton />
         </div>
       ) : (

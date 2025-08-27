@@ -146,8 +146,12 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("call-reject", ({ callerUser }) => {
-    socket.to(callerUser.socketId).emit("call-reject");
+  socket.on("call-reject", ({ caller }) => {
+    const callerUser = store.findByPersonalCode(caller);
+
+    if (callerUser) {
+      socket.to(callerUser.socketId).emit("call-reject");
+    }
   });
 
   socket.on("cancel-call", (data) => {

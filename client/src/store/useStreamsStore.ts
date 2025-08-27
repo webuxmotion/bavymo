@@ -13,6 +13,9 @@ type StreamsStore = {
     localAudioActive: boolean;
     setLocalAudioActive: (active: boolean) => void;
 
+    localVideoActive: boolean;
+    setLocalVideoActive: (active: boolean) => void;
+
     remoteStream: MediaStream | null;
     setRemoteStream: (stream: MediaStream | null) => void;
 };
@@ -29,6 +32,9 @@ export const useStreamsStore = create<StreamsStore>((set) => ({
 
     localAudioActive: true,
     setLocalAudioActive: (active) => set({ localAudioActive: active }),
+
+    localVideoActive: true,
+    setLocalVideoActive: (active) => set({ localVideoActive: active }),
 
     remoteStream: null,
     setRemoteStream: (stream) => set({ remoteStream: stream }),

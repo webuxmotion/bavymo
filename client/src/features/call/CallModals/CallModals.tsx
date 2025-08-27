@@ -34,7 +34,9 @@ function CallModals() {
     }
 
     const handleReject = () => {
+        socket?.emit("call-reject", { caller: call.callerId });
 
+        callSetters.resetCall();
     }
 
     return (

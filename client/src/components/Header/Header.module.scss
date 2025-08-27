@@ -18,6 +18,10 @@
     width: 220px;
     display: inline-block;
 
+    &:hover {
+        opacity: 0.8;
+    }
+
     svg {
         width: 100%;
         height: auto;
@@ -40,9 +44,14 @@
             font-weight: 500;
             padding: 15px 25px;
             border-radius: 100px;
+            text-wrap: nowrap;
 
             &.active {
                 background-color: #7e95c7;
+            }
+
+            &:not(.active):hover {
+                opacity: 0.8;
             }
         }
     }
@@ -56,5 +65,9 @@
 
     &.active {
         background-color: #7e95c7;
+    }
+
+    &:not(.active):hover {
+        opacity: 0.8;
     }
 }

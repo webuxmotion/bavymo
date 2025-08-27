@@ -5,6 +5,7 @@ import styles from './MicButton.module.scss';
 import Mic from "@/icons/Mic";
 import { switchAudio } from "@/utils/switchAudio";
 import MicOff from "@/icons/MicOff";
+import clsx from "clsx";
 
 export default function MicButton() {
   const { localAudioActive } = useStreamsStore();
@@ -15,8 +16,11 @@ export default function MicButton() {
       delay={200}
     >
       <button
-        className={styles.micButton}
-        onClick={() => switchAudio(localAudioActive)}
+        className={clsx(
+          styles.micButton,
+          !localAudioActive && styles.offState
+        )}
+        onClick={() => switchAudio()}
       >
         {localAudioActive ? <Mic /> : <MicOff />}
       </button>

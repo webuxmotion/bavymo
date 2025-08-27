@@ -19,4 +19,8 @@ export function initCallListeners({
         callSetters.setCallerId("");
         callSetters.setCallStatus("idle");
     });
+
+    socket.on("call-reject", () => {
+        callSetters.resetCall();
+    });
 }

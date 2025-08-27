@@ -1,3 +1,5 @@
+@use "@/styles/colors";
+
 .callForm {
   padding-top: 30px;
 
@@ -12,15 +14,27 @@
   font-size: 20px;
   font-weight: bold;
   display: inline-flex;
-  gap: 12px;
-  background-color: #19c290;
-  padding: 17px 41px;
+  gap: 5px;
+  background-color: colors.$green;
+  padding: 15px 40px 15px 35px;
   border-radius: 100px;
   cursor: pointer;
   margin-right: 20px;
+
+  &:hover {
+    background-color: colors.$greenHover;
+  }
 }
 
 .icon {
+  svg {
+    width: 40px;
+    height: auto;
+    
+    path {
+      fill: white;
+    }
+  }
 }
 
 .inputWrapper {

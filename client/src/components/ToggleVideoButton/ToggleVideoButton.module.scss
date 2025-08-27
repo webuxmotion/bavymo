@@ -1,4 +1,4 @@
-.micButton {
+.toggleVideoButton {
   width: 60px;
   height: 60px;
   background-color: #e3eaf9;
@@ -12,14 +12,6 @@
     transform 0.1s ease,
     box-shadow 0.2s ease;
 
-  &.offState {
-    svg {
-      path {
-        fill: #fa6e67;
-      }
-    }
-  }
-
   svg {
     width: 50%;
     height: auto;
@@ -27,6 +19,14 @@
     path {
       fill: #4e6aa7;
       transition: fill 0.2s ease;
+    }
+  }
+
+  &.offState {
+    svg {
+      path {
+        fill: #fa6e67;
+      }
     }
   }
 
