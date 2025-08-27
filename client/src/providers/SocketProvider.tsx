@@ -17,7 +17,6 @@ const SERVER_URL =
 
 export function SocketProvider({ children }: { children: ReactNode }) {
     const [socket, setSocket] = useState<Socket | null>(null);
-    const [isConnected, setIsConnected] = useState(false);
     const { setUser, callSetters } = useAppContext();
 
     const [randomId, setRandomId] = useState<string | null>(null);
@@ -40,7 +39,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
             newSocket.on("connect", () => {
                 console.log("✅ Connected:", newSocket?.id);
-                setIsConnected(true);
             });
 
             newSocket.on('setRandomId', (id: string) => setRandomId(id));
@@ -81,7 +79,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <SocketContext.Provider value={{ socket, isConnected, randomId, serverData }}>
+        <SocketContext.Provider value={{ socket, randomId, serverData }}>
             {children}
         </SocketContext.Provider>
     );

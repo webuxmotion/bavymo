@@ -4,7 +4,6 @@ import type { ServerData } from "./SocketProvider";
 
 export type SocketContextType = {
   socket: Socket | null;
-  isConnected: boolean;
   randomId: string | null;
   serverData: ServerData;
 };
@@ -12,7 +11,6 @@ export type SocketContextType = {
 // Create context with default values
 export const SocketContext = createContext<SocketContextType>({
   socket: null,
-  isConnected: false,
   randomId: null,
   serverData: { users: [] }
 });

@@ -2,6 +2,12 @@
     background-color: #a2b9eb;
     border-radius: 100px;
     position: relative;
+    transition: border-radius 1s ease-in-out; // default (reverse)
+
+    &.active {
+        border-radius: 20px;
+        transition: border-radius 0.3s ease-in-out; // forward
+    }
 }
 
 .spacer {
