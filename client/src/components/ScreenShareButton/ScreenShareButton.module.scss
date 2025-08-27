@@ -12,6 +12,14 @@
         transform 0.1s ease,
         box-shadow 0.2s ease;
 
+    &.active {
+        svg {
+            path {
+                fill: #178d42;
+            }
+        }
+    }
+
     svg {
         width: 50%;
         height: auto;

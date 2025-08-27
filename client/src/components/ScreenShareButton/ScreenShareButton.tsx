@@ -3,6 +3,7 @@ import { useStreamsStore } from "@/store/useStreamsStore";
 import { switchScreenSharing } from "@/utils/switchScreenSharing";
 import { Tooltip } from "../Tooltip/Tooltip";
 import styles from './ScreenShareButton.module.scss';
+import clsx from 'clsx';
 
 
 export function ScreenShareButton() {
@@ -14,7 +15,10 @@ export function ScreenShareButton() {
       delay={200}
     >
       <button
-        className={styles.button}
+        className={clsx(
+          styles.button,
+          screenSharingActive && styles.active
+        )}
         onClick={() => switchScreenSharing(screenSharingActive)}
       >
         <ScreenShare />

@@ -3,7 +3,7 @@ import { useStreamsStore } from "../store/useStreamsStore";
 import { usePeerConnectionStore } from "../store/usePeerConnectionStore";
 
 export const switchScreenSharing = async (active: boolean) => {
-    const { setScreenSharingStream, setScreenSharingActive, screenSharingStream } =
+    const { setScreenSharingStream, setScreenSharingActive, screenSharingStream, localStream } =
         useStreamsStore.getState();
     const { peerConnection } = usePeerConnectionStore.getState();
 
@@ -20,7 +20,7 @@ export const switchScreenSharing = async (active: boolean) => {
         }
 
         // Revert back to camera
-        const cameraStream = await navigator.mediaDevices.getUserMedia({
+        const cameraStream = localStream || await navigator.mediaDevices.getUserMedia({
             video: true,
             audio: true,
         });

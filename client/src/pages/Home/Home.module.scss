@@ -58,6 +58,10 @@
     padding: 17px 40px;
     border-radius: 100px;
     display: inline-block;
+
+    &:hover {
+        background-color: colors.$greenHover;
+    }
 }
 
 .videoPreview {
