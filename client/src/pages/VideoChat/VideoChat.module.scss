@@ -30,10 +30,21 @@
     border-bottom-left-radius: 100px;
     width: 100%;
     transform: translateX(100%);
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 50px;
 
     &.active {
         transform: translateX(0);
     }
+}
+
+.sidebarHeader {
+    padding-top: 20px;
+}
+
+.sidebarMain {
+    flex-grow: 1;
 }
 
 @media (max-width: 1300px) {

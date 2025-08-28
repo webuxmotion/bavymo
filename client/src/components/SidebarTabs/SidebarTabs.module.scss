@@ -1,0 +1,21 @@
+.sidebarTabs {
+  @apply flex justify-center;
+}
+
+.button {
+  font-size: 25px;
+  font-weight: bold;
+  color: #7086B6;
+  cursor: pointer;
+  padding: 12px 70px;
+  border-radius: 100px;
+
+  &.active {
+    color: #2C3F68;
+    background-color: #DFE9FF;
+  }
+
+  &:not(.active):hover {
+    color: #516590;
+  }
+}

@@ -8,6 +8,8 @@ import CallForm from "@/features/call/CallForm/CallForm";
 import { useSocket } from "@/providers/useSocket";
 import { useWebRTC } from "@/hooks/useWebRTC";
 import { useAppContext } from "@/providers/AppProvider";
+import SidebarTabs from "@/components/SidebarTabs/SidebarTabs";
+import SidebarContent from "@/components/SidebarContent/SidebarContent";
 
 function VideoChat() {
     const location = useLocation();
@@ -50,7 +52,12 @@ function VideoChat() {
                     <div
                         className={clsx(styles.sidebarContent, isActive && styles.active)}
                     >
-                        {/* sidebar content */}
+                        <header className={styles.sidebarHeader}>
+                            <SidebarTabs />
+                        </header>
+                        <main className={styles.sidebarMain}>
+                            <SidebarContent />
+                        </main>
                     </div>
                 </div>
             </section>
