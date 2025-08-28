@@ -1,15 +1,17 @@
-import { OnlineUser, Room, CallStatus, Message } from '../shared/types';
+import { CallStatus, ConnectedPair, Message, OnlineUser, Room } from '../shared/types';
 
 type CreateRoomProps = {
-    caller: OnlineUser;
-    callee: OnlineUser;
+  caller: OnlineUser;
+  callee: OnlineUser;
 }
 
 export class RoomStore {
   private rooms: Map<string, Room>;
+  private connectedPairs: Map<string, ConnectedPair>;
 
   constructor() {
     this.rooms = new Map();
+    this.connectedPairs = new Map();
   }
 
   createRoom({ caller, callee }: CreateRoomProps): Room {
@@ -22,8 +24,14 @@ export class RoomStore {
       callStatus: "ringing",
       messages: [],
     };
+    const connectedPair = {
+      roomId,
+      users: []
+    }
 
     this.rooms.set(roomId, newRoom);
+    this.connectedPairs.set(roomId, connectedPair);
+
     return newRoom;
   }
 
@@ -47,6 +55,34 @@ export class RoomStore {
 
   removeRoom(roomId: string) {
     this.rooms.delete(roomId);
+  }
+
+  findRoomByParticipantSocketId(socketId: string): Room | undefined {
+    for (const room of this.rooms.values()) {
+      if (room.participants.some(p => p.socketId === socketId)) {
+        return room;
+      }
+    }
+    return undefined;
+  }
+
+  pushToConnectedPair(roomId: string, user: OnlineUser) {
+    const pair = this.connectedPairs.get(roomId);
+    if (!pair) return;
+
+    // Avoid duplicates
+    const exists = pair.users.some(u => u.socketId === user.socketId);
+    if (!exists) {
+      pair.users.push(user);
+    }
+  }
+
+  getConnectedPair(roomId: string): ConnectedPair | undefined {
+    return this.connectedPairs.get(roomId);
+  }
+
+  removeConnectedPair(roomId: string) {
+    this.connectedPairs.delete(roomId);
   }
 
   private generateRoomId(): string {

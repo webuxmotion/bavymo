@@ -49,9 +49,9 @@ export function useWebRTC(socket: Socket | null): UseWebRTCReturn {
             };
 
             pcRef.current.onconnectionstatechange = () => {
-                console.log("Connection state:", pcRef.current?.connectionState);
-                if (pcRef.current?.connectionState === "connected") {
+                if (pcRef.current?.connectionState === "connected" && socket) {
                     console.log("Peer connection established!");
+                    socket.emit("webrtc-connected");
                 }
             };
         },

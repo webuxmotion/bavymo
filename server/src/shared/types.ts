@@ -30,3 +30,8 @@ export type Room = {
   callStatus: CallStatus;
   messages: Message[]
 }
+
+export type ConnectedPair = {
+  roomId: string;
+  users: OnlineUser[]
+}

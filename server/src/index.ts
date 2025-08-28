@@ -102,6 +102,29 @@ io.on("connection", (socket) => {
 
   socket.emit("personal-code", randomId);
 
+  socket.on("webrtc-connected", () => {
+    const room = roomStore.findRoomByParticipantSocketId(socket.id);
+    const user = userStore.getUser(socket.id);
+
+    if (room && user) {
+      roomStore.pushToConnectedPair(room?.roomId, user);
+
+      const connectedPair = roomStore.getConnectedPair(room?.roomId);
+
+      if (connectedPair) {
+        if (connectedPair.users.length === 2) {
+          roomStore.updateCallStatus(room.roomId, "connected");
+
+          const updatedRoom = roomStore.getRoom(room.roomId);
+
+          io.to(connectedPair.users.map(p => p.socketId)).emit("room", updatedRoom);
+
+          
+        }
+      }
+    }
+  });
+
   socket.on("start-call", (data) => {
     const { caller, callee } = data;
 
