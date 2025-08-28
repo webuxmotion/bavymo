@@ -1,18 +1,19 @@
-import LogoBig from "@/icons/LogoBig";
-import LocalVideo from '../LocalVideo/LocalVideo';
-import { useRef } from 'react';
 import Jobs from '@/icons/Jobs';
-import RemoteVideo from '../RemoteVideo/RemoteVideo';
+import LogoBig from "@/icons/LogoBig";
+import UserLoading from "@/icons/UserLoading";
+import { useRoomStore } from "@/store/useRoomStore";
 import { useStreamsStore } from '@/store/useStreamsStore';
-import { useAnimatedUsers } from './useAnimatedUsers';
 import clsx from 'clsx';
-import { useAppContext } from '@/providers/AppProvider';
+import { useRef } from 'react';
+import LocalVideo from '../LocalVideo/LocalVideo';
+import RemoteVideo from '../RemoteVideo/RemoteVideo';
+import { useAnimatedUsers } from './useAnimatedUsers';
 import styles from './Video.module.scss';
 
 export default function Video() {
   const contentRef = useRef<HTMLDivElement>(null);
   const { remoteStream } = useStreamsStore();
-  const { data } = useAppContext();
+  const room = useRoomStore(s => s.room);
 
   const animatedUsers = useAnimatedUsers(contentRef);
 
@@ -20,7 +21,7 @@ export default function Video() {
     <div
       className={clsx(
         styles.video,
-        data.call.status === "connected" && styles.active
+        room?.callStatus === "connected" && styles.active
       )}
     >
       <div className={styles.spacer} />
@@ -30,23 +31,31 @@ export default function Video() {
           <RemoteVideo />
         ) : (
           <>
-            <div className={styles.image}>
-              <LogoBig />
-            </div>
-            <div className={styles.users}>
-              {animatedUsers.map(u => (
-                <div
-                  key={u.socketId}
-                  className={styles.user}
-                  style={{ transform: `translate(${u.x}px, ${u.y}px)` }}
-                >
-                  <div className={styles.userIcon}>
-                    <Jobs.Worker />
-                  </div>
-                  <span className={styles.userTitle}>{u.personalCode}</span>
+            {room?.callStatus === "accepted" ? (
+              <div className={styles.image}>
+                <UserLoading />
+              </div>
+            ) : (
+              <>
+                <div className={styles.image}>
+                  <LogoBig />
                 </div>
-              ))}
-            </div>
+                <div className={styles.users}>
+                  {animatedUsers.map(u => (
+                    <div
+                      key={u.socketId}
+                      className={styles.user}
+                      style={{ transform: `translate(${u.x}px, ${u.y}px)` }}
+                    >
+                      <div className={styles.userIcon}>
+                        <Jobs.Worker />
+                      </div>
+                      <span className={styles.userTitle}>{u.personalCode}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </>
         )}
 

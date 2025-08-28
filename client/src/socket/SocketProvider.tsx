@@ -1,11 +1,13 @@
-import { initCallListeners } from "@/features/call/socket-listeners";
-import { SocketContext } from "@/providers/socket-context";
-import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
-import { useAppContext } from "./AppProvider";
+import { useWebRTC } from "@/hooks/useWebRTC";
+import { useAppContext } from "@/providers/AppProvider";
+import { useRoomStore } from "@/store/useRoomStore";
 import { useUsersStore } from "@/store/useUsersStore";
 import { closePeerConnectionAndResetStore } from "@/utils/closePeerConnectionAndResetStore";
+import type { Room } from "@server/shared/types";
+import type { ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
+import { io, Socket } from "socket.io-client";
+import { SocketContext } from "./socket-context";
 
 export interface ServerData {
     users: string[];
@@ -16,13 +18,18 @@ const SERVER_URL =
     process.env.NODE_ENV === 'production' ? 'https://bavymo.com' : 'http://localhost:4000';
 
 export function SocketProvider({ children }: { children: ReactNode }) {
-    const [socket, setSocket] = useState<Socket | null>(null);
-    const { setUser, callSetters } = useAppContext();
+    const socket = useRef<Socket | null>(null);
+    const { setUser, callSetters, user } = useAppContext();
+    const { startCall } = useWebRTC(socket.current);
 
     const [randomId, setRandomId] = useState<string | null>(null);
     const [serverData, setServerData] = useState<ServerData>({ users: [] });
 
     const setUsers = useUsersStore((state) => state.setUsers);
+    const setRoom = useRoomStore((state) => state.setRoom);
+
+
+
 
     useEffect(() => {
         let newSocket: Socket | null = null;
@@ -34,8 +41,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
             const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:4000";
             newSocket = io(SOCKET_URL);
-
-            setSocket(newSocket);
+            socket.current = newSocket;
 
             newSocket.on("connect", () => {
                 console.log("✅ Connected:", newSocket?.id);
@@ -52,11 +58,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
             newSocket.on("online-users", (data) => {
                 setUsers(data);
-            });
-
-            initCallListeners({
-                socket: newSocket,
-                callSetters,
             });
 
             newSocket.on("user-hanged-up", () => {
@@ -77,8 +78,28 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+
+    useEffect(() => {
+        if (user.personalCode) {
+
+            const basedOnUserHandlers = async () => {
+                socket.current?.on("room", (room: Room) => {
+                    setRoom(room);
+
+                    if (room.callStatus === "accepted" && user.personalCode === room.callerId) {
+                        startCall(room.calleeId);
+                    }
+                });
+            }
+
+            basedOnUserHandlers();
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user.personalCode]);
+
     return (
-        <SocketContext.Provider value={{ socket, randomId, serverData }}>
+        <SocketContext.Provider value={{ socket: socket.current, randomId, serverData }}>
             {children}
         </SocketContext.Provider>
     );

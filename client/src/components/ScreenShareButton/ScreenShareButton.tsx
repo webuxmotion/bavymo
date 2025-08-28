@@ -6,7 +6,7 @@ import styles from './ScreenShareButton.module.scss';
 import clsx from 'clsx';
 
 
-export function ScreenShareButton() {
+export default function ScreenShareButton() {
   const screenSharingActive = useStreamsStore((s) => s.screenSharingActive);
 
   return (

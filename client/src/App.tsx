@@ -1,14 +1,16 @@
-import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home/Home";
+import { useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
 import styles from './App.module.scss';
 import Header from "./components/Header/Header";
-import VideoChat from "./pages/VideoChat/VideoChat";
-import { useLocalVideo } from "./hooks/useLocalVideo";
-import { useEffect } from "react";
 import CallModals from "./features/call/CallModals/CallModals";
+import { useLocalVideo } from "./hooks/useLocalVideo";
+import Home from "./pages/Home/Home";
+import VideoChat from "./pages/VideoChat/VideoChat";
+import { useRoomStore } from "./store/useRoomStore";
 
 function App() {
   const { initMedia } = useLocalVideo();
+  const room = useRoomStore(s => s.room);
 
   useEffect(() => {
     initMedia();
@@ -26,7 +28,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      <CallModals />
+      {room?.callStatus === "ringing" && <CallModals />}
     </div>
   );
 }

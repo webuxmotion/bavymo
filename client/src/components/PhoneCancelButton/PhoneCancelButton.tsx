@@ -1,6 +1,6 @@
 import PhoneCancel from '@/icons/PhoneCancel';
 import styles from './PhoneCancelButton.module.scss';
-import { useSocket } from '@/providers/useSocket';
+import { useSocket } from '@/socket/useSocket';
 import { useData } from '@/hooks/useData';
 import { useAppContext } from '@/providers/AppProvider';
 import { closePeerConnectionAndResetStore } from '@/utils/closePeerConnectionAndResetStore';

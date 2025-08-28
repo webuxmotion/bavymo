@@ -2,15 +2,7 @@ import clsx from 'clsx';
 import MessageInput from '../MessageInput/MessageInput';
 import styles from './Chat.module.scss';
 import { useEffect, useRef } from 'react';
-
-type Message = {
-  id: string;
-  chatId: string;
-  senderId: string;
-  recipientId: string;
-  content: string;
-  timestamp: number;
-};
+import type { Message } from '@server/shared/types';
 
 const messages: Message[] = [
   { id: "1", chatId: "1", senderId: "4", recipientId: "6", content: "Hey! How are you?", timestamp: 1693123200000 },

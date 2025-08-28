@@ -1,8 +1,8 @@
+import { useStreamsStore } from '@/store/useStreamsStore';
 import { useCallback, useEffect, useRef } from 'react';
-import { configuration } from './configuration';
 import type { Socket } from 'socket.io-client';
 import { usePeerConnectionStore } from '../store/usePeerConnectionStore';
-import { useStreamsStore } from '@/store/useStreamsStore';
+import { configuration } from './configuration';
 
 type SignalData = {
     sdp?: RTCSessionDescriptionInit;
@@ -45,6 +45,13 @@ export function useWebRTC(socket: Socket | null): UseWebRTCReturn {
             pcRef.current.onicecandidate = (event) => {
                 if (event.candidate && socket) {
                     socket.emit('signal', { to: calleeRandomId, data: { candidate: event.candidate } });
+                }
+            };
+
+            pcRef.current.onconnectionstatechange = () => {
+                console.log("Connection state:", pcRef.current?.connectionState);
+                if (pcRef.current?.connectionState === "connected") {
+                    console.log("Peer connection established!");
                 }
             };
         },

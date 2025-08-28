@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { OnlineUser } from "@server/shared/types";
 import { useAppContext } from "@/providers/AppProvider";
-import { useSocket } from "@/providers/useSocket";
+import { useSocket } from "@/socket/useSocket";
 import { useUsersStore } from "@/store/useUsersStore";
 
 interface AnimatedUser extends OnlineUser {

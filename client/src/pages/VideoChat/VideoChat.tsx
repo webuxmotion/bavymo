@@ -1,37 +1,22 @@
+import PersonalCode from "@/components/PersonalCode/PersonalCode";
+import SidebarContent from "@/components/SidebarContent/SidebarContent";
+import SidebarTabs from "@/components/SidebarTabs/SidebarTabs";
+import Video from "@/components/Video/Video";
+import CallForm from "@/features/call/CallForm/CallForm";
+import VideoControls from "@/features/call/VideoControls/VideoControls";
+import { useSocket } from "@/socket/useSocket";
+import { useRoomStore } from "@/store/useRoomStore";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import clsx from "clsx";
 import styles from "./VideoChat.module.scss";
-import Video from "@/components/Video/Video";
-import PersonalCode from "@/components/PersonalCode/PersonalCode";
-import CallForm from "@/features/call/CallForm/CallForm";
-import { useSocket } from "@/providers/useSocket";
-import { useWebRTC } from "@/hooks/useWebRTC";
-import { useAppContext } from "@/providers/AppProvider";
-import SidebarTabs from "@/components/SidebarTabs/SidebarTabs";
-import SidebarContent from "@/components/SidebarContent/SidebarContent";
+
 
 function VideoChat() {
     const location = useLocation();
     const [isActive, setIsActive] = useState(false);
-    const { socket, randomId } = useSocket();
-    const { callSetters } = useAppContext();
-    const { startCall } = useWebRTC(socket);
-
-    useEffect(() => {
-        const listener = async ({ callee }: { callee: string }) => {
-            startCall(callee);
-            callSetters.setOutgoing(false);
-            callSetters.setCallStatus("connected");
-        }
-
-        socket?.on("call-accept", listener);
-
-        return () => {
-            socket?.off("call-accept", listener);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [socket]);
+    const { randomId } = useSocket();
+    const room = useRoomStore(s => s.room);
 
     useEffect(() => {
         if (location.pathname === "/video-chat") {
@@ -45,7 +30,11 @@ function VideoChat() {
             <main className={styles.main}>
                 {randomId && <PersonalCode randomId={randomId} />}
                 <Video />
-                <CallForm />
+                {room?.callStatus !== "accepted" && (
+                    <>
+                        {room?.callStatus === "connected" ? <VideoControls /> : <CallForm />}
+                    </>
+                )}
             </main>
             <section className={styles.sidebar}>
                 <div className={styles.sidebarInner}>

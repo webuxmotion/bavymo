@@ -1,6 +1,6 @@
-import { OnlineUser } from "./shared/types";
+import { OnlineUser } from "../shared/types";
 
-export class Store {
+export class UserStore {
     private onlineUsers: Map<string, OnlineUser>; // key = socketId
 
     constructor() {
@@ -31,4 +31,4 @@ export class Store {
 }
 
 // singleton instance for global usage
-export const store = new Store();
+export const userStore = new UserStore();

@@ -1,11 +1,12 @@
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import express from "express";
 import http from "http";
 import path from "path";
 import { Server } from "socket.io";
-import cors from "cors";
-import cookieParser from "cookie-parser";
+import { roomStore } from "./store/roomStore";
+import { userStore } from "./store/userStore";
 import { generateWord } from "./utils/generateWord";
-import { store } from "./store";
 
 const app = express();
 app.use(cookieParser());
@@ -87,13 +88,13 @@ io.on("connection", (socket) => {
   // Generate new randomId if missing
   if (!randomId) {
     randomId = generateWord();
-    // send it to client to store as cookie
+    // send it to client to userStore as cookie
     socket.emit('setRandomId', randomId);
   }
 
-  store.addUser(socket.id, randomId);
+  userStore.addUser(socket.id, randomId);
 
-  const users = store.getAllUsers();
+  const users = userStore.getAllUsers();
 
   io.emit("online-users", users);
 
@@ -101,21 +102,32 @@ io.on("connection", (socket) => {
 
   socket.emit("personal-code", randomId);
 
-  socket.on("call", (data) => {
+  socket.on("start-call", (data) => {
     const { caller, callee } = data;
 
-    const calleeUser = store.findByPersonalCode(callee);
-    const callerUser = store.findByPersonalCode(caller);
+    const calleeUser = userStore.findByPersonalCode(callee);
+    const callerUser = userStore.findByPersonalCode(caller);
 
-    if (calleeUser && callerUser) {
-      socket.to(calleeUser.socketId).emit("call", {
-        callerUser,
-      });
+    if (callerUser && calleeUser) {
+      const room = roomStore.createRoom({ callee: calleeUser, caller: callerUser });
+
+      io.to(callerUser.socketId).emit("room", room);
+      io.to(calleeUser.socketId).emit("room", room);
+    }
+  });
+
+  socket.on("call-accept", ({ roomId }) => {
+    roomStore.updateCallStatus(roomId, "accepted");
+
+    const room = roomStore.getRoom(roomId);
+
+    if (room) {
+      io.to(room.participants.map(p => p.socketId)).emit("room", room);
     }
   });
 
   socket.on("offer", ({ callee, caller, sdp }) => {
-    const calleeUser = store.findByPersonalCode(callee);
+    const calleeUser = userStore.findByPersonalCode(callee);
 
     if (calleeUser) {
       socket.to(calleeUser.socketId).emit("offer", { sdp, caller, callee });
@@ -123,7 +135,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("answer", ({ callee, caller, sdp }) => {
-    const callerUser = store.findByPersonalCode(caller);
+    const callerUser = userStore.findByPersonalCode(caller);
 
     if (callerUser) {
       socket.to(callerUser.socketId).emit("answer", { sdp, caller, callee });
@@ -131,23 +143,15 @@ io.on("connection", (socket) => {
   });
 
   socket.on('signal', ({ to, data }) => {
-    const toUser = store.findByPersonalCode(to);
+    const toUser = userStore.findByPersonalCode(to);
 
     if (toUser) {
       io.to(toUser.socketId).emit('signal', { from: randomId, data });
     }
   });
 
-  socket.on("call-accept", ({ caller, callee }) => {
-    const callerUser = store.findByPersonalCode(caller);
-
-    if (callerUser) {
-      socket.to(callerUser.socketId).emit("call-accept", { callee, caller });
-    }
-  });
-
   socket.on("call-reject", ({ caller }) => {
-    const callerUser = store.findByPersonalCode(caller);
+    const callerUser = userStore.findByPersonalCode(caller);
 
     if (callerUser) {
       socket.to(callerUser.socketId).emit("call-reject");
@@ -155,7 +159,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("cancel-call", (data) => {
-    const calleeUser = store.findByPersonalCode(data);
+    const calleeUser = userStore.findByPersonalCode(data);
 
     if (calleeUser) {
       socket.to(calleeUser.socketId).emit("cancel-call");
@@ -163,7 +167,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("user-hanged-up", ({ targetCode }) => {
-    const targetUser = store.findByPersonalCode(targetCode);
+    const targetUser = userStore.findByPersonalCode(targetCode);
 
     if (targetUser) {
       socket.to(targetUser.socketId).emit("user-hanged-up");
@@ -172,9 +176,9 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("❌ Client disconnected:", socket.id);
-    store.removeUser(socket.id);
+    userStore.removeUser(socket.id);
 
-    const onlineUsers = store.getAllUsers();
+    const onlineUsers = userStore.getAllUsers();
     io.emit("online-users", onlineUsers);
 
 
