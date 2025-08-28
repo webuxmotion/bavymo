@@ -5,7 +5,7 @@ export type OnlineUser = {
 
 export type Message = {
   id: string;
-  chatId: string;
+  roomId: string;
   senderId: string;
   recipientId: string;
   content: string;
@@ -28,7 +28,6 @@ export type Room = {
   calleeId: string;
   roomId: string;
   callStatus: CallStatus;
-  messages: Message[]
 }
 
 export type ConnectedPair = {

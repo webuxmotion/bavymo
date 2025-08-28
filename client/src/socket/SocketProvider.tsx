@@ -1,5 +1,6 @@
 import { useWebRTC } from "@/hooks/useWebRTC";
 import { useAppContext } from "@/providers/AppProvider";
+import { useMessagesStore } from "@/store/useMessagesStore";
 import { useRoomStore } from "@/store/useRoomStore";
 import { useUsersStore } from "@/store/useUsersStore";
 import { closePeerConnectionAndResetStore } from "@/utils/closePeerConnectionAndResetStore";
@@ -27,6 +28,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     const setUsers = useUsersStore((state) => state.setUsers);
     const setRoom = useRoomStore((state) => state.setRoom);
+    const setMessages = useMessagesStore((state) => state.setMessages);
 
     useEffect(() => {
         let newSocket: Socket | null = null;
@@ -57,6 +59,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
                 setUsers(data);
             });
 
+            newSocket.on("messages", (messages) => {
+                setMessages(messages);
+            });
+
             newSocket.on("disconnect", () => {
                 console.log("❌ Disconnected");
             });
@@ -84,6 +90,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
                         startCall(room.calleeId);
                     } else if (room.callStatus === "ended") {
                         closePeerConnectionAndResetStore();
+                        setMessages([]);
                     } else if (room.callStatus === "rejected") {
                         // rejected logic
                     } else if (room.callStatus === "cancelled") {

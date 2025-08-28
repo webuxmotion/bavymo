@@ -14,6 +14,9 @@
   overflow-y: auto;
   padding-top: 20px;
   padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .messageWrapper {
@@ -25,13 +28,14 @@
 
     .message {
       border-bottom-right-radius: 0;
-      
     }
   }
 
   &:not(.isSender) {
     .message {
       border-bottom-left-radius: 0;
+
+      background-color: #b3c3ea;
     }
   }
 }

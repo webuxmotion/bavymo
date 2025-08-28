@@ -22,7 +22,6 @@ export class RoomStore {
       calleeId: callee.personalCode,
       participants: [caller, callee],
       callStatus: "ringing",
-      messages: [],
     };
     const connectedPair = {
       roomId,
@@ -43,13 +42,6 @@ export class RoomStore {
     const room = this.rooms.get(roomId);
     if (room) {
       room.callStatus = status;
-    }
-  }
-
-  addMessage(roomId: string, message: Message) {
-    const room = this.rooms.get(roomId);
-    if (room) {
-      room.messages.push(message);
     }
   }
 

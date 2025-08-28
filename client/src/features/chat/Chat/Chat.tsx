@@ -2,25 +2,13 @@ import clsx from 'clsx';
 import MessageInput from '../MessageInput/MessageInput';
 import styles from './Chat.module.scss';
 import { useEffect, useRef } from 'react';
-import type { Message } from '@server/shared/types';
-
-const messages: Message[] = [
-  { id: "1", chatId: "1", senderId: "4", recipientId: "6", content: "Hey! How are you?", timestamp: 1693123200000 },
-  { id: "2", chatId: "1", senderId: "6", recipientId: "4", content: "Hi! I'm good, thanks. How about you?", timestamp: 1693123260000 },
-  { id: "3", chatId: "1", senderId: "4", recipientId: "6", content: "Pretty good. Just finished work.", timestamp: 1693123320000 },
-  { id: "4", chatId: "1", senderId: "6", recipientId: "4", content: "Nice! Did you have a busy day?", timestamp: 1693123380000 },
-  { id: "5", chatId: "1", senderId: "4", recipientId: "6", content: "Yeah, a lot of meetings 😅", timestamp: 1693123440000 },
-  { id: "6", chatId: "1", senderId: "6", recipientId: "4", content: "Oh no. At least it’s over!", timestamp: 1693123500000 },
-  { id: "7", chatId: "1", senderId: "4", recipientId: "6", content: "True. What are you up to?", timestamp: 1693123560000 },
-  { id: "8", chatId: "1", senderId: "6", recipientId: "4", content: "Just relaxing, watching a show.", timestamp: 1693123620000 },
-  { id: "9", chatId: "1", senderId: "4", recipientId: "6", content: "Cool! Which one?", timestamp: 1693123680000 },
-  { id: "10", chatId: "1", senderId: "6", recipientId: "4", content: "Stranger Things. Rewatching it 😁", timestamp: 1693123740000 },
-  { id: "11", chatId: "1", senderId: "4", recipientId: "6", content: "Nice choice! I love that show.", timestamp: 1693123800000 },
-  { id: "12", chatId: "1", senderId: "6", recipientId: "4", content: "We should watch it together sometime!", timestamp: 1693123860000 },
-];
+import { useAppContext } from '@/providers/AppProvider';
+import { useMessagesStore } from '@/store/useMessagesStore';
+import Header from '../Header/Header';
 
 export default function Chat() {
-  const userId = "6";
+  const { user } = useAppContext();
+  const messages = useMessagesStore(s => s.messages);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -34,7 +22,7 @@ export default function Chat() {
   return (
     <div className={styles.chat}>
       <header>
-        header
+        <Header />
       </header>
       <main className={styles.main}>
         <div className={styles.scrollable} ref={scrollRef}>
@@ -48,7 +36,7 @@ export default function Chat() {
                 key={message.id}
                 className={clsx(
                   styles.messageWrapper,
-                  userId === message.senderId && styles.isSender
+                  user.personalCode === message.senderId && styles.isSender
                 )}
               >
                 <div className={styles.message}>

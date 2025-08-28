@@ -4,6 +4,8 @@ import express from "express";
 import http from "http";
 import path from "path";
 import { Server } from "socket.io";
+import { Message } from "./shared/types";
+import { messageStore } from "./store/messageStore";
 import { roomStore } from "./store/roomStore";
 import { userStore } from "./store/userStore";
 import { generateWord } from "./utils/generateWord";
@@ -134,8 +136,9 @@ io.on("connection", (socket) => {
     if (callerUser && calleeUser) {
       const room = roomStore.createRoom({ callee: calleeUser, caller: callerUser });
 
-      io.to(callerUser.socketId).emit("room", room);
-      io.to(calleeUser.socketId).emit("room", room);
+      if (room) {
+        io.to(room.participants.map(p => p.socketId)).emit("room", room);
+      }
     }
   });
 
@@ -176,6 +179,18 @@ io.on("connection", (socket) => {
 
     if (room) {
       io.to(room.participants.map(p => p.socketId)).emit("room", room);
+    }
+  });
+
+  socket.on("message", ({ message }: { message: Message }) => {
+    const room = roomStore.getRoom(message.roomId);
+
+    if (room) {
+      messageStore.addMessage(message);
+
+      const messages = messageStore.getMessagesByRoomId(room.roomId);
+
+      io.to(room.participants.map(p => p.socketId)).emit("messages", messages);
     }
   });
 

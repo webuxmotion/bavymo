@@ -29,6 +29,28 @@
     height: 56px;
     border-radius: 100px;
     background-color: #a2b9eb;
+    cursor: pointer;
+
+    svg path {
+        fill: #486298;
+    }
 
     @apply flex items-center justify-center;
+
+    &:hover {
+        background-color: #98aedd;
+        svg path {
+            fill: #3a4e7a;
+        }
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); // subtle lift
+    }
+
+    &:active {
+        background-color: #a2b9eb;
+        transform: scale(0.95); // small press animation
+        svg path {
+            fill: #486298;
+        }
+        box-shadow: 0 0 0 transparent;
+    }
 }
