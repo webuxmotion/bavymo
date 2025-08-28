@@ -35,11 +35,11 @@ export default function CallModals() {
     }
 
     const handleReject = () => {
-        socket.emit("call-reject", { caller: room.callerId });
+        socket.emit("call-reject", { roomId: room.roomId });
     }
 
     const cancelCall = () => {
-        socket.emit("cancel-call", room.calleeId);
+        socket.emit("call-cancel", { roomId: room.roomId });
     }
 
     return isCaller ? (

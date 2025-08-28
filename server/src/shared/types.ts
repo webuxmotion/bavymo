@@ -19,7 +19,7 @@ export type CallStatus =
   | "connected"  // call established, media flowing
   | "ended"      // call finished
   | "rejected"   // call declined
-  | "missed"     // call not answered
+  | "cancelled"  // when caller cancel the outgoing call
   | "error";     // some failure occurred
 
 export type Room = {

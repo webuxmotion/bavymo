@@ -19,7 +19,7 @@ const SERVER_URL =
 
 export function SocketProvider({ children }: { children: ReactNode }) {
     const socket = useRef<Socket | null>(null);
-    const { setUser, callSetters, user } = useAppContext();
+    const { setUser, user } = useAppContext();
     const { startCall } = useWebRTC(socket.current);
 
     const [randomId, setRandomId] = useState<string | null>(null);
@@ -27,9 +27,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     const setUsers = useUsersStore((state) => state.setUsers);
     const setRoom = useRoomStore((state) => state.setRoom);
-
-
-
 
     useEffect(() => {
         let newSocket: Socket | null = null;
@@ -60,10 +57,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
                 setUsers(data);
             });
 
-            newSocket.on("user-hanged-up", () => {
-                closePeerConnectionAndResetStore({ callSetters });
-            });
-
             newSocket.on("disconnect", () => {
                 console.log("❌ Disconnected");
             });
@@ -87,7 +80,14 @@ export function SocketProvider({ children }: { children: ReactNode }) {
                     setRoom(room);
 
                     if (room.callStatus === "accepted" && user.personalCode === room.callerId) {
+                        // just caller initiate peerConnection
                         startCall(room.calleeId);
+                    } else if (room.callStatus === "ended") {
+                        closePeerConnectionAndResetStore();
+                    } else if (room.callStatus === "rejected") {
+                        // rejected logic
+                    } else if (room.callStatus === "cancelled") {
+                        // cancelled logic
                     }
                 });
             }

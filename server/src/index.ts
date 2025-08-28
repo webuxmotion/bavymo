@@ -119,7 +119,7 @@ io.on("connection", (socket) => {
 
           io.to(connectedPair.users.map(p => p.socketId)).emit("room", updatedRoom);
 
-          
+
         }
       }
     }
@@ -139,8 +139,38 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("end-call", ({ roomId }) => {
+    roomStore.updateCallStatus(roomId, "ended");
+
+    const room = roomStore.getRoom(roomId);
+
+    if (room) {
+      io.to(room.participants.map(p => p.socketId)).emit("room", room);
+    }
+  });
+
   socket.on("call-accept", ({ roomId }) => {
     roomStore.updateCallStatus(roomId, "accepted");
+
+    const room = roomStore.getRoom(roomId);
+
+    if (room) {
+      io.to(room.participants.map(p => p.socketId)).emit("room", room);
+    }
+  });
+
+  socket.on("call-reject", ({ roomId }) => {
+    roomStore.updateCallStatus(roomId, "rejected");
+
+    const room = roomStore.getRoom(roomId);
+
+    if (room) {
+      io.to(room.participants.map(p => p.socketId)).emit("room", room);
+    }
+  });
+
+  socket.on("call-cancel", ({ roomId }) => {
+    roomStore.updateCallStatus(roomId, "cancelled");
 
     const room = roomStore.getRoom(roomId);
 
@@ -173,37 +203,12 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("call-reject", ({ caller }) => {
-    const callerUser = userStore.findByPersonalCode(caller);
-
-    if (callerUser) {
-      socket.to(callerUser.socketId).emit("call-reject");
-    }
-  });
-
-  socket.on("cancel-call", (data) => {
-    const calleeUser = userStore.findByPersonalCode(data);
-
-    if (calleeUser) {
-      socket.to(calleeUser.socketId).emit("cancel-call");
-    }
-  });
-
-  socket.on("user-hanged-up", ({ targetCode }) => {
-    const targetUser = userStore.findByPersonalCode(targetCode);
-
-    if (targetUser) {
-      socket.to(targetUser.socketId).emit("user-hanged-up");
-    }
-  });
-
   socket.on("disconnect", () => {
     console.log("❌ Client disconnected:", socket.id);
     userStore.removeUser(socket.id);
 
     const onlineUsers = userStore.getAllUsers();
     io.emit("online-users", onlineUsers);
-
 
     userMap.delete(randomId);
 
