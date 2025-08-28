@@ -58,6 +58,7 @@ function VideoChat() {
                         <main className={styles.sidebarMain}>
                             <SidebarContent />
                         </main>
+                        <div className={styles.borderRadiusBackground} />
                     </div>
                 </div>
             </section>

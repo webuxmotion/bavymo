@@ -1,19 +1,18 @@
 .localVideo {
   position: relative;
-  width: 195px;
-  height: 195px;
+  width: 100%; // container width
+  max-width: 300px; // optional
   background-color: #dfe9ff;
   overflow: hidden;
-  resize: both;
   border-radius: 40px;
   display: flex;
   justify-content: center;
-  
-  transition: border-radius 1s ease-in-out; // default (reverse)
+
+  transition: border-radius 1s ease-in-out;
 
   &.active {
     border-radius: 10px;
-    transition: border-radius 0.3s ease-in-out; // forward
+    transition: border-radius 0.3s ease-in-out;
   }
 }
 
