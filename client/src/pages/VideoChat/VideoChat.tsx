@@ -32,7 +32,7 @@ function VideoChat() {
                 <Video />
                 {room?.callStatus !== "accepted" && (
                     <>
-                        {room?.callStatus !== "connected" ? (
+                        {room?.callStatus === "connected" ? (
                             <div className="pt-5">
                                 <VideoControls />
                             </div>
