@@ -16,6 +16,9 @@ const gameListeners = ({ socket, io }: GameListenersProps) => {
 
     const user1 = userStore.findByPersonalCode(userPersonalCode);
     const room = roomStore.getRoom(roomId);
+
+    if (!room || room.callStatus === "ended") return;
+    
     const user2 = room?.participants.filter(
       (el) => el.personalCode !== userPersonalCode
     )[0];
