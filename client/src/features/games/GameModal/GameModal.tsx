@@ -4,6 +4,8 @@ import styles from './GameModal.module.scss';
 export default function GameModal() {
   const game = useGameStore(s => s.game);
 
+  console.log(game);
+
   return (
     <div className={styles.gameModal}>
       <div className={styles.window}>
@@ -11,7 +13,7 @@ export default function GameModal() {
           <h2>TIC-TAC-TOE</h2>
           <button>Close</button>
         </header>
-        {JSON.stringify(game)}
+        {/* {JSON.stringify(game)} */}
       </div>
     </div>
   );
