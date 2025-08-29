@@ -34,3 +34,32 @@ export type ConnectedPair = {
   roomId: string;
   users: OnlineUser[]
 }
+
+export type GameStatus =
+  | "idle"       
+  | "requesting"
+  | "started"
+  | "ended";
+
+export type GameMove = {
+  userId: string;
+  content: string;
+  timestamp: number;
+}
+
+export type Game = {
+  sessionId: string;
+  gameId: string;
+  user1: OnlineUser;
+  user2: OnlineUser;
+  gameStatus: GameStatus;
+  moves: GameMove[];
+}
+
+export type NewGamePayload = {
+  game: {
+    roomId: string;
+    gameId: string;
+    userPersonalCode: string;
+  };
+};

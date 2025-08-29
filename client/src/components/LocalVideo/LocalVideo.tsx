@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { useAppContext } from '@/providers/AppProvider';
 import MicVisualizer from '../MicVisualizer/MicVisualizer';
 import styles from './LocalVideo.module.scss';
 import { useLocalVideoRef } from '@/hooks/useLocalVideoRef';
 import clsx from 'clsx';
+import { useRoomStore } from "@/store/useRoomStore";
 
 export default function LocalVideo() {
   const videoRef = useLocalVideoRef();
-  const { data } = useAppContext();
   const [aspectRatio, setAspectRatio] = useState(1); // default 1:1
+  const room = useRoomStore(s => s.room);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -30,7 +30,7 @@ export default function LocalVideo() {
     <div
       className={clsx(
         styles.localVideo,
-        data.call.status === "connected" && styles.active
+        room?.callStatus === "connected" && styles.active
       )}
       style={{ aspectRatio }}
     >

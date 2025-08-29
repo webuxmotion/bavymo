@@ -7,6 +7,7 @@ import { useLocalVideo } from "./hooks/useLocalVideo";
 import Home from "./pages/Home/Home";
 import VideoChat from "./pages/VideoChat/VideoChat";
 import { useRoomStore } from "./store/useRoomStore";
+import GameModal from "./features/games/GameModal/GameModal";
 
 function App() {
   const { initMedia } = useLocalVideo();
@@ -29,6 +30,7 @@ function App() {
       </Routes>
 
       {room?.callStatus === "ringing" && <CallModals />}
+      <GameModal />
     </div>
   );
 }

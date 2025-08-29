@@ -2,14 +2,6 @@
 
 import type { ReactNode } from "react";
 import { createContext, useContext, useState } from "react";
-import { createSetters } from "./app-setters";
-import type { Call } from "@/features/call/callTypes";
-import { initialCallData } from "@/features/call/initialCallData";
-import type { createCallSetters } from "@/features/call/call-setters";
-
-type Data = {
-    call: Call
-}
 
 export type User = {
     personalCode: string
@@ -20,9 +12,6 @@ export type AppContextType = {
     setUser: (user: User) => void;
     token: string;
     setToken: (t: string) => void;
-    data: Data;
-    setData: React.Dispatch<React.SetStateAction<Data>>;
-    callSetters: ReturnType<typeof createCallSetters>;
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -32,11 +21,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         personalCode: ""
     });
     const [token, setToken] = useState("");
-    const [data, setData] = useState<Data>({
-        call: initialCallData
-    });
-
-    const { callSetters } = createSetters(setData);
 
     return (
         <AppContext.Provider value={{
@@ -44,9 +28,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
             setUser,
             token,
             setToken,
-            data,
-            setData,
-            callSetters
         }}>
             {children}
         </AppContext.Provider>

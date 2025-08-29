@@ -4,11 +4,12 @@ import { useMessagesStore } from "@/store/useMessagesStore";
 import { useRoomStore } from "@/store/useRoomStore";
 import { useUsersStore } from "@/store/useUsersStore";
 import { closePeerConnectionAndResetStore } from "@/utils/closePeerConnectionAndResetStore";
-import type { Room } from "@server/shared/types";
+import type { Game, Room } from "@server/shared/types";
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { SocketContext } from "./socket-context";
+import { useGameStore } from "@/store/useGameStore";
 
 export interface ServerData {
     users: string[];
@@ -29,6 +30,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     const setUsers = useUsersStore((state) => state.setUsers);
     const setRoom = useRoomStore((state) => state.setRoom);
     const setMessages = useMessagesStore((state) => state.setMessages);
+    const setGame = useGameStore((s => s.setGame));
 
     useEffect(() => {
         let newSocket: Socket | null = null;
@@ -96,6 +98,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
                     } else if (room.callStatus === "cancelled") {
                         // cancelled logic
                     }
+                });
+
+                socket.current?.on("game", (game: Game) => {
+                    setGame(game);
                 });
             }
 

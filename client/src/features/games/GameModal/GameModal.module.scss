@@ -1,0 +1,45 @@
+.gameModal {
+  position: fixed;
+  z-index: 9999;
+
+  /* critical: clicks pass through except where the window sits */
+  pointer-events: none;
+
+  /* we move the whole group via transform for smooth dragging */
+  top: 100px;
+  right: 20px;
+}
+
+.window {
+  width: 700px;
+  height: 500px;
+  background-color: #CCE2F5;
+  border-radius: 10px;
+  pointer-events: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  user-select: none;
+}
+
+.header {
+  background-color: white;
+  color: #5E619F;
+  display: flex;
+  justify-content: space-between;
+  cursor: move;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 5px 15px;
+
+  h2 {
+    font-size: 30px;
+    font-weight: bold;
+    pointer-events: none;
+  }
+
+  button {
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    
+  }
+}
