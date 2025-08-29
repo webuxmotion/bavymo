@@ -1,0 +1,78 @@
+.ticTacToeGame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  flex-direction: column;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  grid-template-rows: repeat(3, 80px);
+
+  &.disabled {
+    pointer-events: none;
+  }
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  border: 4px solid #49a2dc;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+
+  &:nth-child(1), &:nth-child(2), &:nth-child(3) {
+    border-top: none;
+  }
+
+  &:nth-child(7), &:nth-child(8), &:nth-child(9) {
+    border-bottom: none;
+  }
+
+  &:nth-child(3), &:nth-child(6), &:nth-child(9) {
+    border-right: none;
+  }
+
+  &:nth-child(1), &:nth-child(4), &:nth-child(7) {
+    border-left: none;
+  }
+}
+
+.header {
+  display: flex;
+  width: 100%;
+  padding-bottom: 20px;
+
+  span {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    color: #5E619F;
+    font-size: 20px;
+    font-weight: bold;
+    position: relative;
+
+    &.active {
+      &::after {
+        content: "";
+        width: 80%;
+        height: 4px;
+        background-color: white;
+        position: absolute;
+        top: 100%;
+      }
+    }
+  }
+}

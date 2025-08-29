@@ -42,6 +42,7 @@ export type GameStatus =
   | "ended";
 
 export type GameMove = {
+  sessionId: string;
   userId: string;
   content: string;
   timestamp: number;

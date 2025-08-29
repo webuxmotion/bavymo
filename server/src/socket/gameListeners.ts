@@ -1,4 +1,4 @@
-import { NewGamePayload } from "../shared/types";
+import { GameMove, NewGamePayload } from "../shared/types";
 import { gameStore } from "../store/gameStore";
 import { roomStore } from "../store/roomStore";
 import { userStore } from "../store/userStore";
@@ -18,20 +18,20 @@ const gameListeners = ({ socket, io }: GameListenersProps) => {
     const room = roomStore.getRoom(roomId);
 
     if (!room || room.callStatus === "ended") return;
-    
+
     const user2 = room?.participants.filter(
       (el) => el.personalCode !== userPersonalCode
     )[0];
 
     if (user1 && user2) {
       const sessionId = generateId();
-      
+
       const newGame = {
         sessionId,
         gameId,
         user1,
         user2,
-        roomId: room.roomId
+        roomId: room.roomId,
       };
 
       gameStore.createGame(newGame);
@@ -39,7 +39,40 @@ const gameListeners = ({ socket, io }: GameListenersProps) => {
       const createdGame = gameStore.getGame(sessionId);
 
       if (createdGame) {
-        io.to(room.participants.map(p => p.socketId)).emit("game", createdGame);
+        io.to(room.participants.map((p) => p.socketId)).emit(
+          "game",
+          createdGame
+        );
+      }
+    }
+  });
+
+  socket.on("game-accepted", ({ gameSessionId }) => {
+    const game = gameStore.getGame(gameSessionId);
+
+    if (game) {
+      gameStore.updateGameStatus(game.sessionId, "started");
+
+      const updatedGame = gameStore.getGame(game.sessionId);
+
+      if (updatedGame) {
+        io.to(game.user1.socketId).emit("game", updatedGame);
+        io.to(game.user2.socketId).emit("game", updatedGame);
+      }
+    }
+  });
+
+  socket.on("game-move", (gameMove: GameMove) => {
+    const game = gameStore.getGame(gameMove.sessionId);
+
+    if (game) {
+      gameStore.addMove(game.sessionId, gameMove);
+
+      const updatedGame = gameStore.getGame(gameMove.sessionId);
+
+      if (updatedGame) {
+        io.to(game.user1.socketId).emit("game", updatedGame);
+        io.to(game.user2.socketId).emit("game", updatedGame);
       }
     }
   });
