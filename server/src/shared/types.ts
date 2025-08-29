@@ -49,6 +49,7 @@ export type GameMove = {
 
 export type Game = {
   sessionId: string;
+  roomId: string;
   gameId: string;
   user1: OnlineUser;
   user2: OnlineUser;

@@ -1,0 +1,47 @@
+.gameRequest {
+  height: 100%;
+  @apply flex items-center flex-col justify-center;
+  text-align: center;
+  padding: 40px;
+  color: #22233d;
+  font-size: 20px;
+}
+
+.actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  color: white;
+}
+
+.accept {
+  background: #22c55e;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover {
+    background: #16a34a;
+  }
+}
+
+.reject {
+  background: #ef4444;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover {
+    background: #dc2626;
+  }
+}
+

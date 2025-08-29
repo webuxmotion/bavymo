@@ -28,6 +28,7 @@ const gameListeners = ({ socket, io }: GameListenersProps) => {
         gameId,
         user1,
         user2,
+        roomId: room.roomId
       };
 
       gameStore.createGame(newGame);

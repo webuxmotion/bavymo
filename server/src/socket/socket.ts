@@ -7,6 +7,7 @@ import { Server } from "socket.io";
 import { generateWord } from "../utils/generateWord";
 import { Server as HttpServer } from "http";
 import gameListeners from "./gameListeners";
+import { gameStore } from "../store/gameStore";
 
 type ServerData = {
   users: string[];
@@ -98,7 +99,16 @@ const initSocket = ({ server }: { server: HttpServer }) => {
 
     if (room) {
       io.to(room.participants.map(p => p.socketId)).emit("room", room);
+
+      const game = gameStore.findGameByRoomId(roomId);
+
+      if (game) {
+        gameStore.removeGame(game.sessionId);
+
+        io.to(room.participants.map(p => p.socketId)).emit("game", null);
+      }
     }
+
   });
 
   socket.on("call-accept", ({ roomId }) => {
