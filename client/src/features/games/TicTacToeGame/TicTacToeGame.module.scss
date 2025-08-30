@@ -26,6 +26,10 @@
   cursor: pointer;
   user-select: none;
 
+  &.unavailable {
+    pointer-events: none;
+  }
+
   &:hover {
     background-color: rgba(255, 255, 255, 0.3);
   }
@@ -44,6 +48,13 @@
 
   &:nth-child(1), &:nth-child(4), &:nth-child(7) {
     border-left: none;
+  }
+
+  span {
+    svg {
+      width: 40px;
+      height: auto;
+    }
   }
 }
 

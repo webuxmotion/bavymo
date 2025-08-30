@@ -31,8 +31,6 @@ export default function TicTacToeGame() {
     }
   };
 
-  console.log(game);
-
   const isYourTurn = checkIsYourTurn();
 
   const handleClickCell = (cellId: number) => {
@@ -52,22 +50,51 @@ export default function TicTacToeGame() {
     }
   }
 
+  const movesObj: Record<number, string> = {};
+
+  game.moves.forEach(move => {
+    const [index, symbol] = move.content.split('|');
+    movesObj[Number(index)] = symbol;
+  });
+
+  const yourSymbol = user.personalCode === game.user1.personalCode ? "cross" : "zero";
+  const opponentSymbol = yourSymbol === "cross" ? "zero" : "cross";
+
   return (
     <div className={styles.ticTacToeGame}>
       <div className={styles.header}>
-        <span className={isYourTurn ? styles.active : ""}><Cross /> YOU</span>
-        <span className={!isYourTurn ? styles.active : ""}><Zero /> Player: {game.user1.personalCode === user.personalCode ? game.user2.personalCode : game.user1.personalCode}</span>
+        <span className={isYourTurn ? styles.active : ""}>
+          {yourSymbol === "cross" ? <Cross /> : <Zero />} YOU
+        </span>
+        <span className={!isYourTurn ? styles.active : ""}>
+          {opponentSymbol === "cross" ? <Cross /> : <Zero />} Player: {
+            game.user1.personalCode === user.personalCode
+              ? game.user2.personalCode
+              : game.user1.personalCode
+          }
+        </span>
       </div>
       <div className={clsx(
         styles.grid,
         !isYourTurn && styles.disabled
       )}>
-        {cells.map((cell) => (
+        {cells.map((cell, index) => (
           <div
             key={cell}
-            className={styles.cell}
+            className={clsx(
+              styles.cell,
+              movesObj[index] && styles.unavailable
+            )}
             onClick={() => handleClickCell(cell)}
-          >{cell}</div>
+          >
+            <span>
+              {movesObj[index] ? (
+                <>
+                  {movesObj[index] === "cross" ? <Cross /> : <Zero />}
+                </>
+              ) : null}
+            </span>
+          </div>
         ))}
       </div>
     </div>
