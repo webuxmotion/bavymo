@@ -11,6 +11,8 @@ const {
 const connectDB = async () => {
   try {
     const uri = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB}`;
+
+    console.log('uri', uri);
     
     console.log('Connecting to MongoDB...');
     await mongoose.connect(uri);
