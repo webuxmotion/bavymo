@@ -8,6 +8,8 @@ import Home from "./pages/Home/Home";
 import VideoChat from "./pages/VideoChat/VideoChat";
 import { useRoomStore } from "./store/useRoomStore";
 import GameModal from "./features/games/GameModal/GameModal";
+import SignIn from "./pages/SignIn/SignIn";
+import SignUp from "./pages/SignUp/SignUp";
 
 function App() {
   const { initMedia } = useLocalVideo();
@@ -25,6 +27,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<>about</>} />
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/video-chat" element={<VideoChat />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

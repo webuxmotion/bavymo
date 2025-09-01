@@ -45,7 +45,7 @@ export default function Header() {
         </nav>
         <div>
           <NavLink
-            to={'/profile'}
+            to={'/sign-in'}
             className={({ isActive }) => {
               return clsx(
                 styles.profileButton,
