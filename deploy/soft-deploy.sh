@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Load environment variables
-source ./deploy/.env.system
-source ./deploy/.env.client
-source ./deploy/.env.server
+source ./.env.system
+source ./.env.client
+source ./.env.server
 
 # ==============================
 # APP DEPLOYMENT
