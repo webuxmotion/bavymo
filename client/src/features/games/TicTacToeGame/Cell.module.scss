@@ -1,0 +1,41 @@
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  border: 4px solid #49a2dc;
+  cursor: pointer;
+  user-select: none;
+
+  &.unavailable {
+    pointer-events: none;
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+
+  &:nth-child(1), &:nth-child(2), &:nth-child(3) {
+    border-top: none;
+  }
+
+  &:nth-child(7), &:nth-child(8), &:nth-child(9) {
+    border-bottom: none;
+  }
+
+  &:nth-child(3), &:nth-child(6), &:nth-child(9) {
+    border-right: none;
+  }
+
+  &:nth-child(1), &:nth-child(4), &:nth-child(7) {
+    border-left: none;
+  }
+
+  span {
+    svg {
+      width: 40px;
+      height: auto;
+    }
+  }
+}

@@ -35,6 +35,16 @@ export class GameStore {
     return this.games.get(sessionId);
   }
 
+  restartGame(sessionId: string): Game | undefined {
+    const game = this.games.get(sessionId);
+    if (game) {
+      game.gameStatus = "started";
+      game.moves = [];
+      return game;
+    }
+    return undefined;
+}
+
   updateGameStatus(sessionId: string, status: GameStatus) {
     const game = this.games.get(sessionId);
     if (game) {

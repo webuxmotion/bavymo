@@ -76,6 +76,26 @@ const gameListeners = ({ socket, io }: GameListenersProps) => {
       }
     }
   });
+
+  socket.on("game-restart", ({ sessionId }) => {
+    const game = gameStore.restartGame(sessionId);
+
+    if (game) {
+      io.to(game.user1.socketId).emit("game", game);
+      io.to(game.user2.socketId).emit("game", game);
+    }
+  });
+
+  socket.on("game-close", ({ sessionId }) => {
+    const game = gameStore.getGame(sessionId);
+
+    if (game) {
+      gameStore.removeGame(sessionId);
+
+      io.to(game.user1.socketId).emit("game", null);
+      io.to(game.user2.socketId).emit("game", null);
+    }
+  });
 };
 
 export default gameListeners;

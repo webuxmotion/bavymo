@@ -6,19 +6,10 @@ import Cross from './icons/Cross';
 import Zero from './icons/Zero';
 import type { GameMove } from '@server/shared/types';
 import { useSocket } from '@/socket/useSocket';
+import Cell from './Cell';
+import { checkIsYourTurn, checkWinner, getPlayersInfo, parseMoves } from './gameUtils';
 
 const cells = Array.from({ length: 9 }, (_, i) => i);
-
-const winCombinations: number[][] = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6],
-];
 
 export default function TicTacToeGame() {
   const game = useGameStore(s => s.game);
@@ -27,36 +18,12 @@ export default function TicTacToeGame() {
 
   if (!game || !user) return null;
 
-  const movesObj: Record<number, string> = {};
-  game.moves.forEach(move => {
-    const [index, symbol] = move.content.split('|');
-    movesObj[Number(index)] = symbol;
-  });
-
-  const checkIsYourTurn = () => {
-    const movesCount = game.moves.length;
-    const isUser1Turn = movesCount % 2 === 0;
-    return isUser1Turn
-      ? user.personalCode === game.user1.personalCode
-      : user.personalCode === game.user2.personalCode;
-  };
-
-  const checkWinner = () => {
-    for (const combo of winCombinations) {
-      const [a, b, c] = combo;
-      if (
-        movesObj[a] &&
-        movesObj[a] === movesObj[b] &&
-        movesObj[a] === movesObj[c]
-      ) {
-        return movesObj[a]; // "cross" or "zero"
-      }
-    }
-    return null;
-  };
-
-  const winner = checkWinner();
-  const isYourTurn = !winner && checkIsYourTurn();
+  const { you, opponent } = getPlayersInfo(game, user.personalCode);
+  const movesObj = parseMoves(game.moves);
+  const winner = checkWinner(movesObj);
+  const isBoardFull = cells.every(c => movesObj[c]);
+  const isDraw = !winner && isBoardFull;
+  const isYourTurn = !winner && !isDraw && checkIsYourTurn(game, user.personalCode);
 
   const handleClickCell = (cellId: number) => {
     if (isYourTurn && socket && !movesObj[cellId]) {
@@ -72,47 +39,49 @@ export default function TicTacToeGame() {
     }
   };
 
-  const yourSymbol = user.personalCode === game.user1.personalCode ? "cross" : "zero";
-  const opponentSymbol = yourSymbol === "cross" ? "zero" : "cross";
+  const handleRestartGame = () => {
+    if (socket) {
+      socket.emit("game-restart", { sessionId: game.sessionId });
+    }
+  }
 
   return (
     <div className={styles.ticTacToeGame}>
       <div className={styles.header}>
         {winner ? (
-          <span className={styles.winner}>
-            {winner === "cross" ? <Cross /> : <Zero />} Wins!
-          </span>
+          <div className={styles.winner}>
+            {winner === "cross" ? <Cross /> : <Zero />}{" "}
+            {you.symbol === winner ? "You win!" : `Player: ${opponent.personalCode} wins!`}
+            <br />
+            <button onClick={handleRestartGame}>Restart game</button>
+          </div>
+        ) : isDraw ? (
+          <div className={styles.winner}>
+            🤝 It's a draw!
+            <br />
+            <button onClick={handleRestartGame}>Restart game</button>
+          </div>
         ) : (
           <>
             <span className={isYourTurn ? styles.active : ""}>
-              {yourSymbol === "cross" ? <Cross /> : <Zero />} YOU
+              {you.symbol === "cross" ? <Cross /> : <Zero />} YOU
             </span>
             <span className={!isYourTurn ? styles.active : ""}>
-              {opponentSymbol === "cross" ? <Cross /> : <Zero />} Player: {
-                game.user1.personalCode === user.personalCode
-                  ? game.user2.personalCode
-                  : game.user1.personalCode
-              }
+              {opponent.symbol === "cross" ? <Cross /> : <Zero />} Player: {opponent.personalCode}
             </span>
           </>
         )}
       </div>
 
       <div className={clsx(styles.grid, (!isYourTurn || winner) && styles.disabled)}>
-        {cells.map((cell, index) => (
-          <div
+        {cells.map((cell) => (
+          <Cell
             key={cell}
-            className={clsx(
-              styles.cell,
-              movesObj[index] && styles.unavailable
-            )}
-            onClick={() => handleClickCell(cell)}
-          >
-            <span>
-              {movesObj[index] === "cross" ? <Cross /> : null}
-              {movesObj[index] === "zero" ? <Zero /> : null}
-            </span>
-          </div>
+            index={cell}
+            symbol={movesObj[cell]}
+            disabled={!isYourTurn || !!winner}
+            onClick={handleClickCell}
+          />
         ))}
       </div>
     </div>
