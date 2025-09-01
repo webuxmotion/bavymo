@@ -3,6 +3,8 @@
     padding-top: 23px;
     padding-right: 35px;
     transition: ease-in-out 300ms;
+    position: relative;
+    z-index: 10;
 
     &.chat {
         padding-right: 600px;
