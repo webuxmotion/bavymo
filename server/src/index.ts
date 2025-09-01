@@ -3,11 +3,18 @@ import cors from "cors";
 import express from "express";
 import http from "http";
 import path from "path";
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+import connectDB from './db';
+import authRoutes from './routes/auth';
 
 import { generateWord } from "./utils/generateWord";
 import initSocket from "./socket/socket";
 
 const app = express();
+app.use(express.json());
 app.use(cookieParser());
 export const allowedOrigins = [
   "https://bavymo.com",
@@ -26,6 +33,8 @@ app.use(cors({
 app.get("/server-test", (_req, res) => {
   res.send("Server is running ✅");
 });
+
+app.use('/api', authRoutes);
 
 app.get('/api/get-random-id', (req, res) => {
   let randomId = req.cookies?.randomId;
@@ -63,6 +72,13 @@ const server = http.createServer(app);
 initSocket({ server });
 
 const PORT = 4000;
-server.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+
+const startServer = async () => {
+  await connectDB();
+
+  server.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
+};
+
+startServer();

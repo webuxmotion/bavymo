@@ -1,2 +1,5 @@
 /node_modules
 /deploy/deploy.conf
+/deploy/.env.client
+/deploy/.env.server
+/deploy/.env.system

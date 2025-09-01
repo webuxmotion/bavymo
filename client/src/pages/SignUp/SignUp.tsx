@@ -12,15 +12,23 @@ export default function SignUp() {
     const [repeatPassword, setRepeatPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async () => {
         setError('');
         setSuccess('');
 
+        if (!email || !password || !repeatPassword) {
+            setError("All fields are required");
+            return;
+        }
+
         if (password !== repeatPassword) {
             setError("Passwords do not match");
             return;
         }
+
+        setLoading(true);
 
         try {
             const res = await fetch("/api/auth/register", {
@@ -32,7 +40,7 @@ export default function SignUp() {
             const data = await res.json();
 
             if (!res.ok) {
-                setError(data.error || "Failed to register");
+                setError(data.message || "Failed to register");
             } else {
                 setSuccess("Account created! You can now sign in.");
                 setEmail('');
@@ -42,7 +50,14 @@ export default function SignUp() {
         } catch (err) {
             console.error(err);
             setError("Something went wrong");
+        } finally {
+            setLoading(false);
         }
+    };
+
+    const handleGoogleSignUp = () => {
+        // Redirect to your backend Google OAuth endpoint
+        window.location.href = "/api/auth/google";
     };
 
     return (
@@ -62,6 +77,7 @@ export default function SignUp() {
                     className="mb-5"
                     label="Password"
                     placeholder="Password"
+                    type="password"
                     icon={<Password />}
                     value={password}
                     onChange={setPassword}
@@ -79,18 +95,26 @@ export default function SignUp() {
                 {error && <p className="text-red-500">{error}</p>}
                 {success && <p className="text-green-500">{success}</p>}
 
-                <button className={styles.button} onClick={handleSubmit}>Sign Up</button>
+                <button
+                    className={styles.button}
+                    onClick={handleSubmit}
+                    disabled={loading}
+                >
+                    {loading ? "Creating..." : "Sign Up"}
+                </button>
+
                 <p className="mt-5 mb-5">
                     Already have an account? <Link to='/sign-in'>Sign In</Link>
                 </p>
-                <p className="mb-4">
-                    or
-                </p>
-                <button className={styles.buttonGoogle}>
+                <p className="mb-4">or</p>
+                <button
+                    className={styles.buttonGoogle}
+                    onClick={handleGoogleSignUp}
+                >
                     <Google />
                     Sign Up with Google
                 </button>
             </div>
         </div>
-    )
+    );
 }

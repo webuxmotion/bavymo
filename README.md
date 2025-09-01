@@ -15,3 +15,15 @@ Designed for scalability, developer productivity, and a clean developer experien
 ## 🎨 Branding & Fonts
 - **Logo font:** [M PLUS Rounded 1c](https://fonts.google.com/specimen/M+PLUS+Rounded+1c)  
 - **Site font:** [Roboto](https://fonts.google.com/specimen/Roboto?query=roboto)  
+
+
+## Run mongodb locally
+
+```
+brew tap mongodb/brew
+brew install mongodb-community@7.0
+
+brew services start mongodb/brew/mongodb-community
+
+brew services stop mongodb/brew/mongodb-community
+```

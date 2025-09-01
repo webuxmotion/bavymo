@@ -1,11 +1,12 @@
 #!/bin/bash
 
-source ./deploy.conf
+# Load system variables
+export $(grep -v '^#' deploy/.env.system | xargs)
 
 # ==============================
 # APP DEPLOYMENT
 # ==============================
-cd $APP_DIR || exit
+cd "$SYS_APP_DIR" || exit
 
 # Update repo
 git fetch origin
@@ -16,6 +17,7 @@ git reset --hard origin/main
 # ==============================
 cd client
 npm install
+export $(grep -v '^#' ../deploy/.env.client | xargs)
 cat > .env.production <<EOL
 VITE_SOCKET_URL=$VITE_SOCKET_URL
 EOL
@@ -27,17 +29,22 @@ cd ..
 # ==============================
 cd server
 npm install
+export $(grep -v '^#' ../deploy/.env.server | xargs)
+cat > .env.production <<EOL
+MONGO_USER=$SRV_MONGO_USER
+MONGO_PASSWORD=$SRV_MONGO_PASSWORD
+MONGO_DB=$SRV_MONGO_DB
+MONGO_HOST=$SRV_MONGO_HOST
+MONGO_PORT=$SRV_MONGO_PORT
+EOL
 npm run build
 cd ..
 
 # ==============================
 # RESTART APP WITH PM2
 # ==============================
-pm2 delete $APP_NAME || true
-pm2 start npm --name "$APP_NAME" -- start
+pm2 delete "$SYS_APP_NAME" || true
+pm2 start npm --name "$SYS_APP_NAME" -- start --env production
 pm2 save
 
-# ==============================
-# FINAL MESSAGE
-# ==============================
-echo "✅ Minimal deployment completed! App rebuilt and restarted."
+echo "✅ Soft deployment completed! App rebuilt and restarted."
