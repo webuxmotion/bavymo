@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# Load system variables
-export $(grep -v '^#' deploy/.env.system | xargs)
+# Load environment variables
+source ./deploy/.env.system
+source ./deploy/.env.client
+source ./deploy/.env.server
 
 # ==============================
 # APP DEPLOYMENT
@@ -17,7 +19,6 @@ git reset --hard origin/main
 # ==============================
 cd client
 npm install
-export $(grep -v '^#' ../deploy/.env.client | xargs)
 cat > .env.production <<EOL
 VITE_SOCKET_URL=$VITE_SOCKET_URL
 EOL
@@ -29,10 +30,9 @@ cd ..
 # ==============================
 cd server
 npm install
-export $(grep -v '^#' ../deploy/.env.server | xargs)
 cat > .env.production <<EOL
 MONGO_USER=$SRV_MONGO_USER
-MONGO_PASSWORD=$SRV_MONGO_PASSWORD
+MONGO_PASSWORD="$SRV_MONGO_PASSWORD"
 MONGO_DB=$SRV_MONGO_DB
 MONGO_HOST=$SRV_MONGO_HOST
 MONGO_PORT=$SRV_MONGO_PORT
