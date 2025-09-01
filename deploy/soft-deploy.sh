@@ -30,7 +30,7 @@ cd ..
 # ==============================
 cd server
 npm install
-cat > .env.production <<EOL
+cat > .env <<EOL
 MONGO_USER=$SRV_MONGO_USER
 MONGO_PASSWORD="$SRV_MONGO_PASSWORD"
 MONGO_DB=$SRV_MONGO_DB
