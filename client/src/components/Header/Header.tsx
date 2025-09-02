@@ -2,6 +2,7 @@ import { NavLink, Link, useLocation } from "react-router-dom";
 import Logo from "@/icons/Logo";
 import styles from './Header.module.scss';
 import clsx from "clsx";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const LINKS = [
   { id: 0, title: "Video Chat", to: "/video-chat" },
@@ -12,6 +13,7 @@ const LINKS = [
 
 export default function Header() {
   const location = useLocation();
+  const user = useAuthStore(s => s.user);
 
   return (
     <div
@@ -44,19 +46,23 @@ export default function Header() {
           </ul>
         </nav>
         <div>
-          <NavLink
-            to={'/sign-in'}
-            className={({ isActive }) => {
-              return clsx(
-                styles.profileButton,
-                isActive ? styles.active : undefined
-              )
-            }}
-          >
-            Login
-          </NavLink>
+          {user && user.email ? (
+            <div>{user.email}</div>
+          ) : (
+            <NavLink
+              to={'/sign-in'}
+              className={({ isActive }) => {
+                return clsx(
+                  styles.profileButton,
+                  isActive ? styles.active : undefined
+                )
+              }}
+            >
+              Login
+            </NavLink>
+          )}
         </div>
       </div>
-    </div>
+    </div >
   );
 }

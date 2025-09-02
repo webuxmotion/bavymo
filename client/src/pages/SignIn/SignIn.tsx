@@ -4,14 +4,16 @@ import Email from '@/icons/Email';
 import Password from '@/icons/Password';
 import Google from '@/icons/Google';
 import styles from './SignIn.module.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-
+    const { setAuth } = useAuthStore();
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         setError('');
@@ -30,9 +32,10 @@ export default function SignIn() {
                 setError(data.error || "Login failed");
             } else {
                 setSuccess("Logged in successfully!");
-                
-                // redirect if needed
-                
+
+                setAuth(data.user, data.token);
+
+                navigate("/video-chat");
             }
         } catch (err) {
             console.error(err);
@@ -56,6 +59,7 @@ export default function SignIn() {
                 <Input
                     className="mb-3"
                     label="Password"
+                    type="password"
                     placeholder="Password"
                     icon={<Password />}
                     value={password}
