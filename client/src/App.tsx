@@ -11,6 +11,7 @@ import GameModal from "./features/games/GameModal/GameModal";
 import SignIn from "./pages/SignIn/SignIn";
 import SignUp from "./pages/SignUp/SignUp";
 import About from "./pages/About/About";
+import MidiTest from "./pages/MidiTest/MidiTest";
 
 function App() {
   const { initMedia } = useLocalVideo();
@@ -28,6 +29,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/midi-test" element={<MidiTest />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/video-chat" element={<VideoChat />} />
