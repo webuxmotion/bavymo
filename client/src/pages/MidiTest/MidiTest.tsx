@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import MidiUploader from "../MidiUploader/MidiUploader";
 
 interface MidiKey {
   note: number;
@@ -53,6 +54,8 @@ const MidiTest = () => {
       <h2 className="mb-4 text-xl font-bold">
         Press a key on your Yamaha synth 🎹
       </h2>
+
+      <MidiUploader />
 
       <div className="relative flex">
         {keys
