@@ -61,6 +61,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
                 setUsers(data);
             });
 
+            newSocket.on("lilka-event", (data) => {
+                console.log("📢 Lilka sent:", data);
+            })
+
             newSocket.on("messages", (messages) => {
                 setMessages(messages);
             });

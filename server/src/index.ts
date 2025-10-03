@@ -9,9 +9,10 @@ dotenv.config();
 
 import connectDB from './db';
 import authRoutes from './routes/auth';
+import lilkaRoutes from './routes/lilka';
 
 import { generateWord } from "./utils/generateWord";
-import initSocket from "./socket/socket";
+import { initSocket, io } from "./socket/socket";
 
 const app = express();
 app.use(express.json());
@@ -36,6 +37,9 @@ app.get("/server-test", (_req, res) => {
 });
 
 app.use('/api', authRoutes);
+
+
+app.use('/api/lilka', lilkaRoutes);
 
 app.get('/api/get-random-id', (req, res) => {
   let randomId = req.cookies?.randomId;

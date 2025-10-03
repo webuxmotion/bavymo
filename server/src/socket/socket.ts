@@ -16,8 +16,10 @@ type ServerData = {
 const userMap = new Map();
 const serverData: ServerData = { users: [] };
 
+let io: Server; 
+
 const initSocket = ({ server }: { server: HttpServer }) => {
-  const io = new Server(server, {
+  io = new Server(server, {
     cors: {
       origin: allowedOrigins,
       credentials: true,
@@ -197,6 +199,8 @@ const initSocket = ({ server }: { server: HttpServer }) => {
       io.emit("serverData", serverData);
     });
   });
+
+  return io;
 };
 
-export default initSocket;
+export { initSocket, io };
