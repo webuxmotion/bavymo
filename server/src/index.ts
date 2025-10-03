@@ -64,6 +64,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.get("/server-test", (_req, res) => {
+  console.log(`🚀 Server tested!`);
   res.send("Server is running ✅");
 });
 
